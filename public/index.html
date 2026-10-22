@@ -16,7 +16,7 @@
   --fg: #b9cbbf;
   --acento: #a6d6b3;
   --acento-suave: #7fae91;
-  --apagado: #53705f;
+  --apagado: #6f9180;
   --borde: rgba(147, 201, 162, 0.16);
   --borde-fuerte: rgba(147, 201, 162, 0.3);
   color-scheme: dark;
@@ -63,12 +63,13 @@ a:hover { color: var(--fg); text-decoration-color: var(--acento); }
 }
 .barra .marca { color: var(--acento); font-weight: 700; text-decoration: none; }
 .barra nav { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 13.5px; }
-.barra nav a { color: var(--apagado); text-decoration: none; }
+.barra nav a { display: inline-block; min-height: 24px; line-height: 24px; color: var(--apagado); text-decoration: none; }
 .barra nav a:hover { color: var(--acento); }
 .idioma-btn {
   font-family: inherit;
   font-size: 13px;
-  padding: 2px 10px;
+  min-height: 28px;
+  padding: 4px 12px;
   background: transparent;
   color: var(--acento);
   border: 1px solid var(--borde-fuerte);
@@ -168,6 +169,12 @@ a:hover { color: var(--fg); text-decoration-color: var(--acento); }
 }
 .largo { font-size: clamp(16px, 1.8vw, 18px); max-width: 46em; }
 
+/* Numeración de secciones: [01] … [05] delante del prompt de cada bloque. */
+main { counter-reset: sec; }
+section.bloque { counter-increment: sec; }
+section.bloque > .cmd { font-weight: 700; color: var(--acento); }
+section.bloque > .cmd::before { content: "[" counter(sec, decimal-leading-zero) "] "; color: var(--apagado); font-weight: 400; }
+
 /* Pareja de secciones (sobre_mi y experiencia): dos columnas desde 1000px, apiladas en móvil. */
 .pareja { display: grid; grid-template-columns: minmax(0, 1fr); align-items: stretch; }
 .pareja > .bloque { min-width: 0; }
@@ -221,7 +228,8 @@ pre.tabla .cab { color: var(--acento); }
 pre.grafo { white-space: pre-wrap; overflow-wrap: anywhere; }
 
 /* ---------- Habilidades: cada grupo es una cuadrícula de ventanas que pasa a otra fila según el ancho ---------- */
-.ruta { color: var(--acento-suave); margin: 22px 0 12px; font-size: 14.5px; white-space: nowrap; }
+.ruta { color: var(--acento-suave); margin: 22px 0 12px; font-size: 14.5px; overflow-wrap: anywhere; }
+.ruta::after { content: " (" attr(data-n) ")"; color: var(--apagado); }
 .fila-apps { display: grid; gap: 4px; }
 .grupo-apps { min-width: 0; padding-bottom: 14px; border-bottom: 1px dashed var(--borde); }
 .grupo-apps:last-child { border-bottom: 0; }
@@ -278,7 +286,7 @@ pre.grafo { white-space: pre-wrap; overflow-wrap: anywhere; }
   padding: 6px 10px;
   border-top: 1px dashed var(--borde);
   color: var(--apagado);
-  font-size: 11.5px;
+  font-size: 12.5px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -309,7 +317,8 @@ pre.grafo { white-space: pre-wrap; overflow-wrap: anywhere; }
 .copiar {
   font-family: inherit;
   font-size: 13px;
-  padding: 2px 10px;
+  min-height: 28px;
+  padding: 4px 12px;
   background: transparent;
   color: var(--acento);
   border: 1px solid var(--borde-fuerte);
@@ -417,6 +426,14 @@ pre.grafo { white-space: pre-wrap; overflow-wrap: anywhere; }
             <dd>Git · GitHub · Docker · Maven</dd>
           </div>
           <div>
+            <dt data-en="education">formacion</dt>
+            <dd data-en="Higher Vocational Degree in Multiplatform Application Development (2025–present) · Intermediate Vocational Degree in Microcomputer Systems and Networks (2023–2025)">Grado Superior en Desarrollo de Aplicaciones Multiplataforma (2025–actualidad) · Grado Medio en Sistemas Microinformáticos y Redes (2023–2025)</dd>
+          </div>
+          <div>
+            <dt data-en="projects">proyectos</dt>
+            <dd>collection-tracker · dopmax</dd>
+          </div>
+          <div>
             <dt data-en="status">estado</dt>
             <dd data-en="looking for a company where I can add value">buscando una empresa en la que aportar valor</dd>
           </div>
@@ -500,7 +517,7 @@ pre.grafo { white-space: pre-wrap; overflow-wrap: anywhere; }
     <div class="fila-apps">
 
       <div class="grupo-apps">
-        <p class="ruta" data-en="~/apps/languages/">~/apps/lenguajes/</p>
+        <p class="ruta" data-n="6" data-en="~/apps/languages/">~/apps/lenguajes/</p>
         <div class="ventanas">
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">java</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
@@ -536,7 +553,7 @@ pre.grafo { white-space: pre-wrap; overflow-wrap: anywhere; }
       </div>
 
       <div class="grupo-apps">
-        <p class="ruta" data-en="~/apps/databases/">~/apps/bases-de-datos/</p>
+        <p class="ruta" data-n="5" data-en="~/apps/databases/">~/apps/bases-de-datos/</p>
         <div class="ventanas">
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">mysql</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
@@ -567,7 +584,7 @@ pre.grafo { white-space: pre-wrap; overflow-wrap: anywhere; }
       </div>
 
       <div class="grupo-apps">
-        <p class="ruta" data-en="~/apps/environments-and-version-control/">~/apps/entornos-y-control-de-versiones/</p>
+        <p class="ruta" data-n="11" data-en="~/apps/environments-and-version-control/">~/apps/entornos-y-control-de-versiones/</p>
         <div class="ventanas">
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">intellij-idea</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
@@ -576,7 +593,7 @@ pre.grafo { white-space: pre-wrap; overflow-wrap: anywhere; }
           </article>
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">netbeans</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
-            <p class="desc" data-en="Java project development: debugging and management">Desarrollo de proyectos Java: depuración y gestión</p>
+            <p class="desc" data-en="Alternative to IntelliJ for Java projects">Alternativa a IntelliJ para proyectos Java</p>
             <p class="perm">-rwxr-xr-x</p>
           </article>
           <article class="ventana">
@@ -628,7 +645,7 @@ pre.grafo { white-space: pre-wrap; overflow-wrap: anywhere; }
       </div>
 
       <div class="grupo-apps">
-        <p class="ruta" data-en="~/apps/systems/">~/apps/sistemas/</p>
+        <p class="ruta" data-n="1" data-en="~/apps/systems/">~/apps/sistemas/</p>
         <div class="ventanas">
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">odoo-erp</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
