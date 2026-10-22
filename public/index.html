@@ -368,16 +368,7 @@ pre.grafo { white-space: pre-wrap; overflow-wrap: anywhere; }
 <main>
 
   <section class="hero" id="inicio">
-    <div class="deco" aria-hidden="true">
-      <i class="izq" style="--y:14%;--s:14px;--x:30px;--d:-12s;--t:44s"></i>
-      <i class="izq" style="--y:38%;--s:22px;--x:60px;--d:-30s;--t:58s"></i>
-      <i class="izq" style="--y:62%;--s:12px;--x:40px;--d:-6s;--t:36s"></i>
-      <i class="izq" style="--y:84%;--s:18px;--x:18px;--d:-40s;--t:66s"></i>
-      <i class="der" style="--y:22%;--s:18px;--x:24px;--d:-20s;--t:52s"></i>
-      <i class="der" style="--y:48%;--s:26px;--x:50px;--d:-48s;--t:70s"></i>
-      <i class="der" style="--y:72%;--s:14px;--x:36px;--d:-10s;--t:41s"></i>
-      <i class="der" style="--y:92%;--s:20px;--x:64px;--d:-34s;--t:60s"></i>
-    </div>
+    <div class="deco" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
     <div class="hero-grid">
       <div class="hero-texto">
         <p class="cmd"><span class="ps">sergio@portfolio:~$</span> neofetch</p>
@@ -727,6 +718,24 @@ dopmax              javascript  node-js     npm</pre>
 </main>
 
 <script>
+// Cuadrados decorativos de la portada: lado, posición, tamaño y ritmo al azar; se recolocan en cada ciclo.
+(function () {
+  function azar(a, b) { return a + Math.random() * (b - a); }
+  function colocar(i) {
+    var s = Math.round(azar(12, 26));
+    i.className = Math.random() < 0.5 ? "izq" : "der";
+    i.style.setProperty("--s", s + "px");
+    i.style.setProperty("--x", Math.round(azar(4, 90 - s)) + "px");
+    i.style.setProperty("--y", Math.round(azar(4, 88)) + "%");
+  }
+  document.querySelectorAll(".deco i").forEach(function (i) {
+    colocar(i);
+    i.style.setProperty("--t", azar(6, 14).toFixed(1) + "s");
+    i.style.setProperty("--d", (-azar(0, 14)).toFixed(1) + "s");
+    i.addEventListener("animationiteration", function () { colocar(i); });
+  });
+})();
+
 (function () {
   var idioma = "es";
   var btnIdioma = document.getElementById("idioma");
