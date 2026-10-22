@@ -144,13 +144,14 @@ a:hover { color: var(--fg); text-decoration-color: var(--acento); }
   height: var(--s);
   background: var(--acento-suave);
   opacity: 0.4;
-  animation: respirar var(--t) ease-in-out var(--d) infinite;
+  animation: onda 9s ease-in-out var(--d) infinite;
 }
 .deco i.izq { left: calc(50% - 440px - var(--x) - var(--s)); }
 .deco i.der { right: calc(50% - 440px - var(--x) - var(--s)); }
-@keyframes respirar {
-  0%, 100% { opacity: 0.05; }
-  50% { opacity: 0.6; }
+@keyframes onda {
+  0%, 100% { opacity: 0.08; }
+  35% { opacity: 0.85; }
+  65% { opacity: 0.2; }
 }
 @media (min-width: 1100px) {
   .deco { display: block; }
@@ -718,31 +719,45 @@ dopmax              javascript  node-js     npm</pre>
 </main>
 
 <script>
-// Cuadrados decorativos de la portada: se crean muchos en los márgenes laterales, con lado, posición,
-// tamaño y ritmo al azar. Cada uno se recoloca en otro punto al terminar su ciclo.
+// Diagonales de cuadrados en los márgenes laterales. A la izquierda la diagonal baja hacia el contenido;
+// a la derecha sube. Los cuadrados son más grandes junto al borde de la página y se apagan en ola,
+// de forma que la luz recorre cada diagonal de arriba abajo.
 (function () {
   var hero = document.querySelector(".hero");
   var deco = document.querySelector(".deco");
-  function azar(a, b) { return a + Math.random() * (b - a); }
-  function margen() { return Math.max(0, (hero.clientWidth - 880) / 2); }
-  function colocar(i) {
-    var m = margen();
-    var s = Math.round(azar(12, 32));
-    var hueco = m - s - 4;
-    i.className = Math.random() < 0.5 ? "izq" : "der";
-    i.style.setProperty("--s", s + "px");
-    // Sesgo hacia el contenido: cuanto más cerca del borde de la página, menos cuadrados.
-    i.style.setProperty("--x", (hueco > 0 ? Math.round(hueco * Math.pow(Math.random(), 1.6)) : 0) + "px");
-    i.style.setProperty("--y", Math.round(azar(0, 96)) + "%");
-  }
-  var total = Math.min(200, Math.round(2 * margen() * hero.clientHeight / 1800));
-  for (var k = 0; k < total; k++) {
+  var m = Math.max(0, (hero.clientWidth - 880) / 2);
+  var H = hero.clientHeight;
+  var CICLO = 9;      // segundos que tarda la ola en dar una vuelta
+  var PASO = 0.18;    // retardo entre cuadrados consecutivos de una diagonal
+
+  function pinta(x, y, s, izq, color, d) {
     var i = document.createElement("i");
-    colocar(i);
-    i.style.setProperty("--t", azar(6, 14).toFixed(1) + "s");
-    i.style.setProperty("--d", (-azar(0, 14)).toFixed(1) + "s");
-    i.addEventListener("animationiteration", function (e) { colocar(e.currentTarget); });
+    i.className = izq ? "izq" : "der";
+    i.style.setProperty("--x", Math.round(x) + "px");
+    i.style.setProperty("--y", Math.round(y) + "px");
+    i.style.setProperty("--s", Math.round(s) + "px");
+    i.style.setProperty("--d", (-d).toFixed(2) + "s");
+    i.style.background = color;
     deco.appendChild(i);
+  }
+
+  // Banda: una diagonal de cuadrados a cada lado. desfase separa las dos bandas.
+  function banda(desfase, escala, color) {
+    var fila = 0;
+    for (var y = 24 + desfase; y < H - 24; y += 26, fila++) {
+      var t = y / H;
+      var xIzq = (1 - t) * (m - 48) + 6;   // izquierda: arriba en el borde, abajo junto al contenido
+      var xDer = t * (m - 48) + 6;         // derecha: espejo, sube hacia el borde
+      var s = (8 + 18 * ((xIzq - 6) / (m - 48))) * escala;
+      var d = (fila * PASO) % CICLO;
+      pinta(xIzq, y, s, true, color, d);
+      pinta(xDer, y, s, false, color, d);
+    }
+  }
+
+  if (m > 0) {
+    banda(0, 1, "var(--acento-suave)");
+    banda(13, 0.55, "var(--apagado)");
   }
 })();
 
