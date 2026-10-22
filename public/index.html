@@ -1,0 +1,699 @@
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Sergio Morocho Perea</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap">
+<style>
+/* Plan: página completa con estética de terminal, pero apagada. Fondo verde-negro suave, texto gris verdoso,
+   un solo acento verde mate y líneas discontinuas en lugar de brillos. Todo en monoespaciada (JetBrains Mono).
+   Elementos visuales: ficha de sistema con logo en ASCII, idioma en barra, historial de formación con
+   forma de grafo, árbol de archivos de cada proyecto, tabla resumen, una fila de ventanas por grupo de aplicaciones
+   y divisores entre columnas.
+   Nada parpadea de forma brusca. */
+:root {
+  --bg: #0d1310;
+  --bg-2: #111a15;
+  --fg: #b9cbbf;
+  --acento: #a6d6b3;
+  --acento-suave: #7fae91;
+  --apagado: #53705f;
+  --borde: rgba(147, 201, 162, 0.16);
+  --borde-fuerte: rgba(147, 201, 162, 0.3);
+  color-scheme: dark;
+}
+html { background: var(--bg); scroll-behavior: smooth; scroll-padding-top: 64px; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "JetBrains Mono", "Fira Code", ui-monospace, Menlo, Consolas, monospace;
+  font-size: 15.5px;
+  line-height: 1.7;
+  overflow-x: hidden;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--acento); text-decoration: underline; text-decoration-color: var(--borde-fuerte); text-underline-offset: 4px; }
+a:hover { color: var(--fg); text-decoration-color: var(--acento); }
+:focus-visible { outline: 1px solid var(--acento-suave); outline-offset: 4px; }
+::selection { background: var(--acento-suave); color: #0d1310; }
+
+.ps { color: var(--acento-suave); }
+.cmd { margin: 0 0 14px; color: var(--fg); overflow-wrap: anywhere; }
+.salida { margin: 0 0 18px; max-width: 60em; overflow-wrap: anywhere; }
+.nota { color: var(--apagado); font-size: 14px; margin: -6px 0 18px; }
+
+/* ---------- Barra superior ---------- */
+.barra {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 20px;
+  padding: 12px 0;
+  margin: 0 calc(-1 * max(16px, env(safe-area-inset-left, 0px)));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  border-bottom: 1px solid var(--borde);
+  background: var(--bg);
+}
+.barra .marca { color: var(--acento); font-weight: 700; text-decoration: none; }
+.barra nav { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 13.5px; }
+.barra nav a { color: var(--apagado); text-decoration: none; }
+.barra nav a:hover { color: var(--acento); }
+
+/* ---------- Portada: texto a la izquierda, ficha a la derecha en escritorio ---------- */
+.hero { padding: clamp(40px, 7vw, 90px) 0 clamp(24px, 4vw, 48px); position: relative; z-index: 1; }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 36px 48px; align-items: center; }
+.hero h1 {
+  margin: 8px 0 18px;
+  font-size: clamp(34px, 7vw, 92px);
+  line-height: 1.02;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--acento);
+  overflow-wrap: anywhere;
+}
+.hero .rol { font-size: clamp(16px, 2vw, 20px); color: var(--fg); margin: 0 0 26px; max-width: 42em; }
+@media (min-width: 1100px) {
+  .hero-grid { grid-template-columns: minmax(0, 1.05fr) 96px minmax(0, 1fr); gap: 36px 0; }
+  .hero-grid .divisor { display: block; }
+  .hero h1 { font-size: clamp(40px, 5.4vw, 74px); }
+}
+
+/* Ficha de sistema: logo ASCII a la izquierda y datos del currículum a la derecha. */
+.ficha {
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, 1fr);
+  gap: 18px 36px;
+  align-items: center;
+  padding: 22px 26px;
+  border: 1px solid var(--borde);
+  background: var(--bg-2);
+}
+.logo {
+  margin: 0;
+  color: var(--acento-suave);
+  font-size: 13px;
+  line-height: 1.35;
+  white-space: pre;
+}
+.datos-sistema { margin: 0; display: grid; gap: 7px; }
+.datos-sistema > div { display: grid; grid-template-columns: minmax(104px, 128px) minmax(0, 1fr); gap: 12px; }
+.datos-sistema dt { color: var(--apagado); }
+.datos-sistema dd { margin: 0; color: var(--fg); overflow-wrap: anywhere; }
+.nivel { letter-spacing: 0.08em; }
+.nivel .on { color: var(--acento-suave); }
+.nivel .off { color: var(--apagado); }
+.nivel-texto { color: var(--apagado); margin-left: 6px; }
+
+.acciones { margin: 26px 0 0; display: flex; flex-wrap: wrap; gap: 10px 18px; }
+.acciones a {
+  border: 1px solid var(--borde-fuerte);
+  padding: 7px 14px;
+  color: var(--acento);
+  text-decoration: none;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.acciones a:hover { background: rgba(147, 201, 162, 0.12); color: var(--fg); }
+.cursor { margin: 28px 0 0; }
+.blink { color: var(--acento-suave); animation: pulso 1.8s ease-in-out infinite; }
+@keyframes pulso { 0%, 100% { opacity: 0.8; } 50% { opacity: 0.12; } }
+
+/* ---------- Bloques ---------- */
+.bloque {
+  position: relative;
+  z-index: 1;
+  scroll-margin-top: 64px;
+  margin-top: clamp(48px, 7vw, 88px);
+  padding-top: clamp(32px, 4vw, 48px);
+  border-top: 1px dashed var(--borde-fuerte);
+}
+.largo { font-size: clamp(16px, 1.8vw, 18px); max-width: 46em; }
+
+/* Doble fila: sobre_mi | contacto */
+.dobles { display: grid; grid-template-columns: minmax(0, 1fr); column-gap: 48px; }
+.dobles > .bloque { min-width: 0; }
+
+/* Divisor grande entre dos columnas: sólo aparece donde el bloque va en dos columnas. */
+.divisor { display: none; position: relative; align-self: stretch; }
+.divisor::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, var(--borde-fuerte) 12%, var(--borde-fuerte) 88%, transparent);
+}
+.divisor::after {
+  content: "◆";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 12px 0;
+  background: var(--bg);
+  color: var(--acento-suave);
+  font-size: 30px;
+  line-height: 1;
+}
+@media (min-width: 1000px) {
+  .dobles { grid-template-columns: minmax(0, 1fr) 96px minmax(0, 1fr); column-gap: 0; align-items: stretch; }
+  .dobles .divisor { display: block; margin-top: clamp(48px, 7vw, 88px); }
+}
+
+pre.json, pre.grafo, pre.arbol, pre.tabla {
+  margin: 0 0 20px;
+  padding: 16px 18px;
+  background: var(--bg-2);
+  border: 1px solid var(--borde);
+  color: var(--fg);
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.55;
+  overflow-x: auto;
+  max-width: 100%;
+}
+pre.json .k { color: var(--acento-suave); }
+pre.json .v { color: var(--fg); }
+pre.grafo .nodo { color: var(--acento); }
+pre.grafo .anio { color: var(--acento-suave); }
+pre.arbol .dir { color: var(--acento); }
+pre.tabla .cab { color: var(--acento); }
+
+/* ---------- Habilidades: una fila por grupo, con desplazamiento horizontal dentro de cada fila ---------- */
+.ruta { color: var(--acento-suave); margin: 22px 0 12px; font-size: 14.5px; white-space: nowrap; }
+.fila-apps { display: grid; gap: 4px; }
+.grupo-apps { min-width: 0; padding-bottom: 14px; border-bottom: 1px dashed var(--borde); }
+.grupo-apps:last-child { border-bottom: 0; }
+.ventanas {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 12px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  padding: 2px 2px 12px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--apagado) transparent;
+}
+.ventana {
+  flex: 0 0 200px;
+  width: 200px;
+  aspect-ratio: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--borde-fuerte);
+  background: var(--bg-2);
+  transition: border-color 0.2s ease;
+}
+.ventana:nth-child(even) { background: #0f1712; }
+.ventana:hover { border-color: var(--acento-suave); }
+.ventana-cab {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--borde);
+  background: rgba(147, 201, 162, 0.06);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--acento);
+}
+.ventana-cab .titulo { min-width: 0; overflow-wrap: anywhere; }
+.controles { display: flex; gap: 3px; flex-shrink: 0; }
+.controles i { display: block; width: 6px; height: 6px; border: 1px solid var(--apagado); }
+.ventana .desc {
+  flex: 1;
+  min-height: 0;
+  margin: 0;
+  padding: 10px 12px;
+  overflow: hidden;
+  color: var(--fg);
+  font-size: 13px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.ventana .perm {
+  margin: 0;
+  padding: 6px 10px;
+  border-top: 1px dashed var(--borde);
+  color: var(--apagado);
+  font-size: 11.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ---------- Proyectos: dos tarjetas en doble fila ---------- */
+.dobles-proyectos { display: grid; grid-template-columns: minmax(0, 1fr); align-items: stretch; }
+@media (min-width: 1000px) {
+  .dobles-proyectos { grid-template-columns: minmax(0, 1fr) 96px minmax(0, 1fr); }
+  .dobles-proyectos .divisor { display: block; }
+}
+.proyecto {
+  margin: 0 0 36px;
+  padding: 22px 24px;
+  border: 1px solid var(--borde);
+  background: var(--bg-2);
+  min-width: 0;
+}
+.proyecto h3 { margin: 4px 0 10px; color: var(--acento); font-size: clamp(20px, 2.4vw, 26px); font-weight: 600; overflow-wrap: anywhere; }
+.proyecto .stack { color: var(--acento-suave); font-size: 14px; margin: 14px 0 14px; overflow-wrap: anywhere; }
+.proyecto .enlace { font-weight: 600; }
+
+/* ---------- Contacto ---------- */
+.contacto dl { margin: 0 0 22px; display: grid; gap: 2px; }
+.contacto dl > div { display: grid; grid-template-columns: minmax(110px, 170px) minmax(0, 1fr); gap: 12px; align-items: baseline; padding: 8px 0; border-bottom: 1px dashed var(--borde); }
+.contacto dt { color: var(--apagado); }
+.contacto dd { margin: 0; color: var(--fg); overflow-wrap: anywhere; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.copiar {
+  font-family: inherit;
+  font-size: 13px;
+  padding: 2px 10px;
+  background: transparent;
+  color: var(--acento);
+  border: 1px solid var(--borde-fuerte);
+  cursor: pointer;
+}
+.copiar:hover { background: rgba(147, 201, 162, 0.12); color: var(--fg); }
+
+.pie { position: relative; z-index: 1; margin: 72px 0 0; padding: 18px 0 40px; border-top: 1px dashed var(--borde-fuerte); color: var(--apagado); font-size: 13.5px; }
+
+/* ---------- Movimiento ---------- */
+@supports (animation-timeline: view()) {
+  .reveal {
+    animation: aparecer linear both;
+    animation-timeline: view();
+    animation-range: entry 0% cover 26%;
+  }
+  @keyframes aparecer {
+    from { opacity: 0.2; transform: translateY(16px); }
+    to { opacity: 1; transform: none; }
+  }
+}
+@media (max-width: 680px) {
+  body { font-size: 14.5px; }
+  .ficha { grid-template-columns: minmax(0, 1fr); padding: 18px 16px; }
+  .logo { font-size: 11.5px; }
+  .datos-sistema > div { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .contacto dl > div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .barra nav { font-size: 12.5px; gap: 4px 14px; }
+  .proyecto { padding: 18px 16px; }
+}
+@media (max-width: 900px) {
+  pre.grafo { font-size: 13px; }
+}
+@media (max-width: 600px) {
+  .ventana { flex-basis: 170px; width: 170px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+
+<header class="barra">
+  <a class="marca" href="#inicio">sergio@portfolio</a>
+  <nav aria-label="Secciones">
+    <a href="#sobre-mi">./sobre_mi</a>
+    <a href="#contacto">./contacto</a>
+    <a href="#experiencia">./experiencia</a>
+    <a href="#habilidades">./habilidades</a>
+    <a href="#proyectos">./proyectos</a>
+  </nav>
+</header>
+
+<main>
+
+  <section class="hero" id="inicio">
+    <div class="hero-grid">
+      <div class="hero-texto">
+        <p class="cmd"><span class="ps">sergio@portfolio:~$</span> neofetch</p>
+        <h1>SERGIO<br>MOROCHO PEREA</h1>
+        <p class="rol">Técnico Superior en Desarrollo de Aplicaciones Multiplataforma</p>
+
+        <p class="cmd" style="margin-top:28px"><span class="ps">sergio@portfolio:~$</span> cat presentacion.txt</p>
+        <p class="salida">Programo en Java y JavaScript. Me interesan la programación orientada a objetos, las bases de datos y las aplicaciones web.</p>
+        <p class="acciones">
+          <a href="#proyectos">ver proyectos</a>
+          <a href="#contacto">contacto</a>
+        </p>
+        <p class="cursor"><span class="ps">sergio@portfolio:~$</span> <span class="blink" aria-hidden="true">█</span></p>
+      </div>
+
+      <div class="divisor" aria-hidden="true"></div>
+
+      <div class="ficha">
+        <pre class="logo" aria-hidden="true">
+ ____    __  __
+/ ___|  |  \/  |
+\___ \  | |\/| |
+ ___) | | |  | |
+|____/  |_|  |_|</pre>
+        <dl class="datos-sistema">
+          <div>
+            <dt>ubicacion</dt>
+            <dd>Madrid, España</dd>
+          </div>
+          <div>
+            <dt>idioma</dt>
+            <dd><span class="nivel" aria-hidden="true"><span class="on">████</span><span class="off">░░</span></span><span class="nivel-texto">Inglés · B2, certificado por Cambridge</span></dd>
+          </div>
+          <div>
+            <dt>lenguajes</dt>
+            <dd>Java · JavaScript · Python · HTML · CSS · SQL</dd>
+          </div>
+          <div>
+            <dt>sistemas</dt>
+            <dd>Ubuntu · Windows · Odoo ERP</dd>
+          </div>
+          <div>
+            <dt>control</dt>
+            <dd>Git · GitHub · Docker · Maven</dd>
+          </div>
+          <div>
+            <dt>estado</dt>
+            <dd>buscando una empresa en la que aportar valor</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <div class="dobles">
+
+    <section class="bloque reveal" id="sobre-mi">
+      <p class="cmd"><span class="ps">sergio@portfolio:~$</span> cat sobre_mi.txt</p>
+      <p class="salida largo">Soy un estudiante de programación, aficionado a ella desde pequeño, especializado en programación orientada a objetos y con conocimientos en base de datos y programación web. Busco una empresa en la que aportar todo el valor que pueda.</p>
+      <p class="cmd"><span class="ps">sergio@portfolio:~$</span> cat datos.json</p>
+      <pre class="json">{
+  <span class="k">"carnet"</span>: <span class="v">"B (en curso)"</span>,
+  <span class="k">"caracter"</span>: [
+    <span class="v">"disciplinado"</span>,
+    <span class="v">"proactivo"</span>,
+    <span class="v">"pensamiento abstracto"</span>,
+    <span class="v">"dispuesto a aprender"</span>
+  ],
+  <span class="k">"fuera_del_codigo"</span>: [
+    <span class="v">"diseño de videojuegos"</span>,
+    <span class="v">"juegos de lucha"</span>
+  ]
+}</pre>
+    </section>
+
+    <div class="divisor" aria-hidden="true"></div>
+
+    <section class="bloque reveal contacto" id="contacto">
+      <p class="cmd"><span class="ps">sergio@portfolio:~$</span> ./contacto.sh</p>
+      <p class="salida">Busco una empresa en la que aportar todo el valor que pueda y seguir creciendo profesionalmente.</p>
+      <dl>
+        <div>
+          <dt>telefono</dt>
+          <dd><span id="tel">626 981 304</span> <button type="button" class="copiar" data-target="tel">copiar</button></dd>
+        </div>
+        <div>
+          <dt>correo</dt>
+          <dd><span id="mail">morochoperea.sergio@gmail.com</span> <button type="button" class="copiar" data-target="mail">copiar</button></dd>
+        </div>
+        <div>
+          <dt>ubicacion</dt>
+          <dd>Madrid, España</dd>
+        </div>
+        <div>
+          <dt>en-linea</dt>
+          <dd>
+            <a href="https://github.com/pochocho8" target="_blank" rel="noopener">github</a>
+            <a href="https://linkedin.com/in/sergio-morocho-perea-25511641a" target="_blank" rel="noopener">linkedin</a>
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+  </div>
+
+  <section class="bloque reveal" id="experiencia">
+    <p class="cmd"><span class="ps">sergio@portfolio:~$</span> git log --graph --oneline experiencia formacion</p>
+    <pre class="grafo">*   <span class="anio">2025 – actualidad</span>  <span class="nodo">Grado Superior en Desarrollo de Aplicaciones Multiplataforma</span>
+|
+*   <span class="anio">cursos</span>             <span class="nodo">Fundamentos de Python 1 y 2</span> (Cisco Networking Academy)
+|
+*   <span class="anio">2023 – 2025</span>        <span class="nodo">Grado Medio en Sistemas Microinformáticos y Redes</span>
+|\
+| *   <span class="anio">abril 2023</span>        <span class="nodo">Prácticas de 4º + Empresa</span> (Taller mecánico)
+|
+*   <span class="anio">prácticas</span>          <span class="nodo">Prácticas de Grado Medio</span> (Centro de Estudios Butarque)</pre>
+  </section>
+
+  <section class="bloque reveal" id="habilidades">
+    <p class="cmd"><span class="ps">sergio@portfolio:~$</span> ls -la ~/apps/</p>
+    <p class="nota">Cada entrada es una aplicación o tecnología con la que trabajo. Los permisos son sólo decoración.</p>
+
+    <div class="fila-apps">
+
+      <div class="grupo-apps">
+        <p class="ruta">~/apps/lenguajes/</p>
+        <div class="ventanas">
+          <article class="ventana">
+            <header class="ventana-cab"><span class="titulo">java</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
+            <p class="desc">POO: clases, herencia y polimorfismo</p>
+            <p class="perm">-rwxr-xr-x</p>
+          </article>
+          <article class="ventana">
+            <header class="ventana-cab"><span class="titulo">javascript</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
+            <p class="desc">Interfaces y peticiones asíncronas</p>
+            <p class="perm">-rwxr-xr-x</p>
+          </article>
+          <article class="ventana">
+            <header class="ventana-cab"><span class="titulo">python</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
+            <p class="desc">Scripts con estructuras de datos y funciones</p>
+            <p class="perm">-rwxr-xr-x</p>
+          </article>
+          <article class="ventana">
+            <header class="ventana-cab"><span class="titulo">html</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
+            <p class="desc">Estructura de páginas web responsivas</p>
+            <p class="perm">-rwxr-xr-x</p>
+          </article>
+          <article class="ventana">
+            <header class="ventana-cab"><span class="titulo">css</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
+            <p class="desc">Maquetación y diseño de páginas</p>
+            <p class="perm">-rwxr-xr-x</p>
+          </article>
+          <article class="ventana">
+            <header class="ventana-cab"><span class="titulo">sql</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
+            <p class="desc">Tablas, relaciones, JOIN y subconsultas</p>
+            <p class="perm">-rwxr-xr-x</p>
+          </article>
+          <article class="ventana">
+            <header class="ventana-cab"><span class="titulo">jdbc</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
+            <p class="desc">Acceso a datos y persistencia desde Java</p>
+            <p class="perm">-rwxr-xr-x</p>
+          </article>
+          <article class="ventana">
+            <header class="ventana-cab"><span class="titulo">jakarta-ee</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
+            <p class="desc">Aplicaciones web en Java con Servlets</p>
+            <p class="perm">-rwxr-xr-x</p>
+          </article>
+        </div>
+      </div>
+
+      <div class="grupo-apps">
+        <p class="ruta">~/apps/bases-de-datos/</p>
+        <div class="ventanas">
+          <article class="ventana">
+            <header class="ventana-cab"><span class="titulo">mysql</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
+            <p class="desc">Bases de datos relacionales con DAO</p>
+            <p class="perm">-rwxr-xr-x</p>
+          </article>
+          <article class="ventana">
+            <header class="ventana-cab"><span class="titulo">microsoft-access</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
+            <p class="desc">Tablas, consultas, formularios e informes</p>
+            <p class="perm">-rwxr-xr-x</p>
+          </article>
+          <article class="ventana">
+            <header class="ventana-cab"><span class="titulo">json</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
+            <p class="desc">Intercambio de datos entre aplicaciones</p>
+            <p class="perm">-rwxr-xr-x</p>
+          </article>
+          <article class="ventana">
+            <header class="ventana-cab"><span class="titulo">xml</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
+            <p class="desc">Datos estructurados con etiquetas</p>
+            <p class="perm">-rwxr-xr-x</p>
+          </article>
+        </div>
+      </div>
+
+      <div class="grupo-apps">
+        <p class="ruta">~/apps/entornos-y-control-de-versiones/</p>
+        <div class="ventanas">
+          <article class="ventana">
+            <header class="ventana-cab"><span class="titulo">intellij-idea</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
+            <p class="desc">Desarrollo de proyectos Java: depuración y gestión</p>
+            <p class="perm">-rwxr-xr-x</p>
+          </article>
+          <article class="ventana">
+            <header class="ventana-cab"><span class="titulo">netbeans</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
+            <p class="desc">Desarrollo de proyectos Java: depuración y gestión</p>
+            <p class="perm">-rwxr-xr-x</p>
+          </article>
+          <article class="ventana">
+            <header class="ventana-cab"><span class="titulo">android-studio</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
+            <p class="desc">Aplicaciones móviles Android: depuración y pruebas</p>
+            <p class="perm">-rwxr-xr-x</p>
+          </article>
+          <article class="ventana">
+            <header class="ventana-cab"><span class="titulo">git</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
+            <p class="desc">Control de versiones: ramas y trabajo colaborativo</p>
+            <p class="perm">-rwxr-xr-x</p>
+          </article>
+          <article class="ventana">
+            <header class="ventana-cab"><span class="titulo">github</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
+            <p class="desc">Repositorios públicos y colaboración</p>
+            <p class="perm">-rwxr-xr-x</p>
+          </article>
+          <article class="ventana">
+            <header class="ventana-cab"><span class="titulo">maven</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
+            <p class="desc">Construcción de proyectos Java</p>
+            <p class="perm">-rwxr-xr-x</p>
+          </article>
+          <article class="ventana">
+            <header class="ventana-cab"><span class="titulo">docker</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
+            <p class="desc">Contenedores e imágenes; Docker Compose</p>
+            <p class="perm">-rwxr-xr-x</p>
+          </article>
+          <article class="ventana">
+            <header class="ventana-cab"><span class="titulo">node-js</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
+            <p class="desc">Servidor de JavaScript</p>
+            <p class="perm">-rwxr-xr-x</p>
+          </article>
+          <article class="ventana">
+            <header class="ventana-cab"><span class="titulo">vs-code</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
+            <p class="desc">Editor de código</p>
+            <p class="perm">-rwxr-xr-x</p>
+          </article>
+          <article class="ventana">
+            <header class="ventana-cab"><span class="titulo">codex</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
+            <p class="desc">IA en terminal para escribir y depurar código</p>
+            <p class="perm">-rwxr-xr-x</p>
+          </article>
+          <article class="ventana">
+            <header class="ventana-cab"><span class="titulo">qwen</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
+            <p class="desc">IA en terminal para documentar código</p>
+            <p class="perm">-rwxr-xr-x</p>
+          </article>
+        </div>
+      </div>
+
+      <div class="grupo-apps">
+        <p class="ruta">~/apps/sistemas/</p>
+        <div class="ventanas">
+          <article class="ventana">
+            <header class="ventana-cab"><span class="titulo">ubuntu</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
+            <p class="desc">Usuarios, permisos y configuración</p>
+            <p class="perm">-rwxr-xr-x</p>
+          </article>
+          <article class="ventana">
+            <header class="ventana-cab"><span class="titulo">windows</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
+            <p class="desc">Usuarios, permisos y configuración</p>
+            <p class="perm">-rwxr-xr-x</p>
+          </article>
+          <article class="ventana">
+            <header class="ventana-cab"><span class="titulo">odoo-erp</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
+            <p class="desc">Gestión aplicada e integración de módulos</p>
+            <p class="perm">-rwxr-xr-x</p>
+          </article>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="bloque reveal" id="proyectos">
+    <p class="cmd"><span class="ps">sergio@portfolio:~$</span> ls -l projects/</p>
+    <p class="nota">Proyectos personales con código público. Cada enlace lleva al repositorio.</p>
+
+    <pre class="tabla"><span class="cab">proyecto            lenguaje    backend     gestor</span>
+collection-tracker  java        jakarta-ee  maven
+dopmax              javascript  node-js     npm</pre>
+
+    <div class="dobles-proyectos">
+
+      <article class="proyecto">
+        <p class="cmd"><span class="ps">sergio@portfolio:~$</span> tree -L 1 projects/collection-tracker</p>
+        <pre class="arbol"><span class="dir">collection-tracker/</span>
+├── Dockerfile
+├── README.md
+├── docker-compose.yml
+├── informacion.md
+├── pom.xml
+├── railway.toml
+├── <span class="dir">mysql/</span>
+└── <span class="dir">src/main/</span></pre>
+        <h3>collection-tracker</h3>
+        <p class="salida">Aplicación web de gestión de colecciones personales. Registro e inicio de sesión, colecciones vinculadas a cada usuario, gestión de ítems y exploración de colecciones públicas. La interfaz se adapta a cualquier dispositivo.</p>
+        <p class="stack">stack: java 21 · jakarta-ee · servlets · mysql · dao · javascript · maven · docker</p>
+        <a class="enlace" href="https://github.com/pochocho8/colection-tracker" target="_blank" rel="noopener">github.com/pochocho8/colection-tracker</a>
+      </article>
+
+      <div class="divisor" aria-hidden="true"></div>
+
+      <article class="proyecto">
+        <p class="cmd"><span class="ps">sergio@portfolio:~$</span> tree -L 1 projects/dopmax</p>
+        <pre class="arbol"><span class="dir">dopmax/</span>
+├── index.html
+├── package.json
+├── package-lock.json
+├── script.js
+├── server.js
+├── styles.css
+└── README.md</pre>
+        <h3>dopmax</h3>
+        <p class="salida">Plataforma de vídeos con interfaz de contenido vertical. El servidor con Node.js ofrece una API para listar los vídeos disponibles y gestiona la subida de archivos.</p>
+        <p class="stack">stack: html · css · javascript · node-js</p>
+        <a class="enlace" href="https://github.com/pochocho8/DopMax" target="_blank" rel="noopener">github.com/pochocho8/DopMax</a>
+      </article>
+
+    </div>
+  </section>
+
+  <p class="pie"><span class="ps">sergio@portfolio:~$</span> exit 0 · Sergio Morocho Perea · Portafolio</p>
+</main>
+
+<script>
+(function () {
+  function seleccionar(el) {
+    var rango = document.createRange();
+    rango.selectNodeContents(el);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(rango);
+  }
+  document.querySelectorAll("[data-target]").forEach(function (btn) {
+    var etiqueta = btn.textContent;
+    var destino = document.getElementById(btn.getAttribute("data-target"));
+    function marcar(texto) {
+      btn.textContent = texto;
+      setTimeout(function () { btn.textContent = etiqueta; }, 1800);
+    }
+    btn.addEventListener("click", function () {
+      var valor = destino.textContent.trim();
+      try {
+        navigator.clipboard.writeText(valor).then(
+          function () { marcar("copiado"); },
+          function () { seleccionar(destino); marcar("selecciónalo"); }
+        );
+      } catch (e) {
+        seleccionar(destino);
+        marcar("selecciónalo");
+      }
+    });
+  });
+})();
+</script>
