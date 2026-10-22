@@ -89,9 +89,8 @@ a:hover { color: var(--fg); text-decoration-color: var(--acento); }
   overflow-wrap: anywhere;
 }
 .hero .rol { font-size: clamp(16px, 2vw, 20px); color: var(--fg); margin: 0 0 26px; max-width: 42em; }
+.hero-grid { max-width: 880px; margin: 0 auto; }
 @media (min-width: 1100px) {
-  .hero-grid { grid-template-columns: minmax(0, 1.05fr) 96px minmax(0, 1fr); gap: 36px 0; }
-  .hero-grid .divisor { display: block; }
   .hero h1 { font-size: clamp(40px, 5.4vw, 74px); }
 }
 
@@ -146,10 +145,13 @@ a:hover { color: var(--fg); text-decoration-color: var(--acento); }
 }
 .largo { font-size: clamp(16px, 1.8vw, 18px); max-width: 46em; }
 
-/* Sobre mí: bloque único centrado, con su cabecera sola en la fila. */
-#sobre-mi { max-width: 760px; margin-left: auto; margin-right: auto; text-align: center; }
-#sobre-mi .cmd, #sobre-mi .salida { margin-left: auto; margin-right: auto; }
-#sobre-mi pre.json { text-align: left; max-width: 480px; margin-left: auto; margin-right: auto; }
+/* Pareja de secciones (sobre_mi y experiencia): dos columnas desde 1000px, apiladas en móvil. */
+.pareja { display: grid; grid-template-columns: minmax(0, 1fr); align-items: stretch; }
+.pareja > .bloque { min-width: 0; }
+@media (min-width: 1000px) {
+  .pareja { grid-template-columns: minmax(0, 1fr) 96px minmax(0, 1fr); }
+  .pareja .divisor { display: block; margin-top: clamp(48px, 7vw, 88px); }
+}
 
 /* Divisor grande entre dos columnas: sólo aparece donde el bloque va en dos columnas. */
 .divisor { display: none; position: relative; align-self: stretch; }
@@ -193,6 +195,7 @@ pre.grafo .nodo { color: var(--acento); }
 pre.grafo .anio { color: var(--acento-suave); }
 pre.arbol .dir { color: var(--acento); }
 pre.tabla .cab { color: var(--acento); }
+pre.grafo { white-space: pre-wrap; overflow-wrap: anywhere; }
 
 /* ---------- Habilidades: cada grupo es una cuadrícula de ventanas que pasa a otra fila según el ancho ---------- */
 .ruta { color: var(--acento-suave); margin: 22px 0 12px; font-size: 14.5px; white-space: nowrap; }
@@ -358,8 +361,6 @@ pre.tabla .cab { color: var(--acento); }
         <p class="cursor"><span class="ps">sergio@portfolio:~$</span> <span class="blink" aria-hidden="true">█</span></p>
       </div>
 
-      <div class="divisor" aria-hidden="true"></div>
-
       <div class="ficha">
         <pre class="logo" aria-hidden="true">
  ____    __  __
@@ -400,6 +401,8 @@ pre.tabla .cab { color: var(--acento); }
     </div>
   </section>
 
+  <div class="pareja">
+
   <section class="bloque reveal" id="sobre-mi">
     <p class="cmd" data-en='<span class="ps">sergio@portfolio:~$</span> cat about_me.txt'><span class="ps">sergio@portfolio:~$</span> cat sobre_mi.txt</p>
     <p class="salida largo" data-en="I am a programming student, passionate about it since I was a child, specialized in object-oriented programming, with knowledge of databases and web programming. I am looking for a company where I can contribute all the value I can.">Soy un estudiante de programación, aficionado a ella desde pequeño, especializado en programación orientada a objetos y con conocimientos en base de datos y programación web. Busco una empresa en la que aportar todo el valor que pueda.</p>
@@ -431,26 +434,40 @@ pre.tabla .cab { color: var(--acento); }
 }</pre>
   </section>
 
+    <div class="divisor" aria-hidden="true"></div>
+
   <section class="bloque reveal" id="experiencia">
     <p class="cmd" data-en='<span class="ps">sergio@portfolio:~$</span> git log --graph --oneline experience education'><span class="ps">sergio@portfolio:~$</span> git log --graph --oneline experiencia formacion</p>
-    <pre class="grafo" data-en='*   <span class="anio">2025 – present</span>   <span class="nodo">Higher Vocational Degree in Multiplatform Application Development</span>
+    <pre class="grafo" data-en='*   <span class="anio">2025 – present</span>
+|   <span class="nodo">Higher Vocational Degree in Multiplatform Application Development</span>
 |
-*   <span class="anio">courses</span>          <span class="nodo">Python Fundamentals 1 and 2</span> (Cisco Networking Academy)
+*   <span class="anio">courses</span>
+|   <span class="nodo">Python Fundamentals 1 and 2</span> (Cisco Networking Academy)
 |
-*   <span class="anio">2023 – 2025</span>     <span class="nodo">Intermediate Vocational Degree in Microcomputer Systems and Networks</span>
+*   <span class="anio">2023 – 2025</span>
+|   <span class="nodo">Intermediate Vocational Degree in Microcomputer Systems and Networks</span>
 |\
-| *   <span class="anio">April 2023</span>     <span class="nodo">4th-year internship + Company</span> (Mechanical workshop)
+| *   <span class="anio">April 2023</span>
+|     <span class="nodo">4th-year internship + Company</span> (Mechanical workshop)
 |
-*   <span class="anio">internship</span>     <span class="nodo">Intermediate Degree internship</span> (Centro de Estudios Butarque)'>*   <span class="anio">2025 – actualidad</span>  <span class="nodo">Grado Superior en Desarrollo de Aplicaciones Multiplataforma</span>
+*   <span class="anio">internship</span>
+    <span class="nodo">Intermediate Degree internship</span> (Centro de Estudios Butarque)'>*   <span class="anio">2025 – actualidad</span>
+|   <span class="nodo">Grado Superior en Desarrollo de Aplicaciones Multiplataforma</span>
 |
-*   <span class="anio">cursos</span>             <span class="nodo">Fundamentos de Python 1 y 2</span> (Cisco Networking Academy)
+*   <span class="anio">cursos</span>
+|   <span class="nodo">Fundamentos de Python 1 y 2</span> (Cisco Networking Academy)
 |
-*   <span class="anio">2023 – 2025</span>        <span class="nodo">Grado Medio en Sistemas Microinformáticos y Redes</span>
+*   <span class="anio">2023 – 2025</span>
+|   <span class="nodo">Grado Medio en Sistemas Microinformáticos y Redes</span>
 |\
-| *   <span class="anio">abril 2023</span>        <span class="nodo">Prácticas de 4º + Empresa</span> (Taller mecánico)
+| *   <span class="anio">abril 2023</span>
+|     <span class="nodo">Prácticas de 4º + Empresa</span> (Taller mecánico)
 |
-*   <span class="anio">prácticas</span>          <span class="nodo">Prácticas de Grado Medio</span> (Centro de Estudios Butarque)</pre>
+*   <span class="anio">prácticas</span>
+    <span class="nodo">Prácticas de Grado Medio</span> (Centro de Estudios Butarque)</pre>
   </section>
+
+  </div>
 
   <section class="bloque reveal" id="habilidades">
     <p class="cmd"><span class="ps">sergio@portfolio:~$</span> ls -la ~/apps/</p>
