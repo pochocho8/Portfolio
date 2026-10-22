@@ -1,5 +1,10 @@
-<meta name="claude:viewport-fit-sides" content="cover">
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Sergio Morocho Perea</title>
+<meta name="description" content="Portafolio de Sergio Morocho Perea, Técnico Superior en Desarrollo de Aplicaciones Multiplataforma.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap">
 <style>
 /* Plan: página completa con estética de terminal, pero apagada. Fondo verde-negro suave, texto gris verdoso,
@@ -184,20 +189,16 @@ pre.grafo .anio { color: var(--acento-suave); }
 pre.arbol .dir { color: var(--acento); }
 pre.tabla .cab { color: var(--acento); }
 
-/* ---------- Habilidades: una fila por grupo, con desplazamiento horizontal dentro de cada fila ---------- */
+/* ---------- Habilidades: cada grupo es una cuadrícula de ventanas que pasa a otra fila según el ancho ---------- */
 .ruta { color: var(--acento-suave); margin: 22px 0 12px; font-size: 14.5px; white-space: nowrap; }
 .fila-apps { display: grid; gap: 4px; }
 .grupo-apps { min-width: 0; padding-bottom: 14px; border-bottom: 1px dashed var(--borde); }
 .grupo-apps:last-child { border-bottom: 0; }
 .ventanas {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: 12px;
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
   padding: 2px 2px 12px;
-  scrollbar-width: thin;
-  scrollbar-color: var(--apagado) transparent;
 }
 .ventana {
   flex: 0 0 200px;
@@ -319,6 +320,8 @@ pre.tabla .cab { color: var(--acento); }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
 </style>
+</head>
+<body>
 
 <header class="barra">
   <a class="marca" href="#inicio">sergio@portfolio</a>
@@ -373,7 +376,7 @@ pre.tabla .cab { color: var(--acento); }
           </div>
           <div>
             <dt>sistemas</dt>
-            <dd>Ubuntu · Windows · Odoo ERP</dd>
+            <dd>Odoo ERP</dd>
           </div>
           <div>
             <dt>control</dt>
@@ -487,18 +490,8 @@ pre.tabla .cab { color: var(--acento); }
             <p class="perm">-rwxr-xr-x</p>
           </article>
           <article class="ventana">
-            <header class="ventana-cab"><span class="titulo">sql</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
-            <p class="desc">Tablas, relaciones, JOIN y subconsultas</p>
-            <p class="perm">-rwxr-xr-x</p>
-          </article>
-          <article class="ventana">
             <header class="ventana-cab"><span class="titulo">jdbc</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
             <p class="desc">Acceso a datos y persistencia desde Java</p>
-            <p class="perm">-rwxr-xr-x</p>
-          </article>
-          <article class="ventana">
-            <header class="ventana-cab"><span class="titulo">jakarta-ee</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
-            <p class="desc">Aplicaciones web en Java con Servlets</p>
             <p class="perm">-rwxr-xr-x</p>
           </article>
         </div>
@@ -510,6 +503,11 @@ pre.tabla .cab { color: var(--acento); }
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">mysql</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
             <p class="desc">Bases de datos relacionales con DAO</p>
+            <p class="perm">-rwxr-xr-x</p>
+          </article>
+          <article class="ventana">
+            <header class="ventana-cab"><span class="titulo">sql</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
+            <p class="desc">Tablas, relaciones, JOIN y subconsultas</p>
             <p class="perm">-rwxr-xr-x</p>
           </article>
           <article class="ventana">
@@ -594,16 +592,6 @@ pre.tabla .cab { color: var(--acento); }
       <div class="grupo-apps">
         <p class="ruta">~/apps/sistemas/</p>
         <div class="ventanas">
-          <article class="ventana">
-            <header class="ventana-cab"><span class="titulo">ubuntu</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
-            <p class="desc">Usuarios, permisos y configuración</p>
-            <p class="perm">-rwxr-xr-x</p>
-          </article>
-          <article class="ventana">
-            <header class="ventana-cab"><span class="titulo">windows</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
-            <p class="desc">Usuarios, permisos y configuración</p>
-            <p class="perm">-rwxr-xr-x</p>
-          </article>
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">odoo-erp</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
             <p class="desc">Gestión aplicada e integración de módulos</p>
@@ -697,3 +685,5 @@ dopmax              javascript  node-js     npm</pre>
   });
 })();
 </script>
+</body>
+</html>
