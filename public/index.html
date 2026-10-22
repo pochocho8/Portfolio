@@ -134,6 +134,38 @@ a:hover { color: var(--fg); text-decoration-color: var(--acento); }
 .blink { color: var(--acento-suave); animation: pulso 1.8s ease-in-out infinite; }
 @keyframes pulso { 0%, 100% { opacity: 0.8; } 50% { opacity: 0.12; } }
 
+/* Bloques verdes sólidos a los lados de la portada: aparecen y desaparecen, cada uno con su retardo. */
+.deco {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+  z-index: 0;
+}
+.deco-izq { left: calc(-1 * max(16px, env(safe-area-inset-left, 0px))); }
+.deco-der { right: calc(-1 * max(16px, env(safe-area-inset-right, 0px))); align-items: flex-end; }
+.deco i {
+  display: block;
+  width: 14px;
+  height: var(--h);
+  background: var(--acento-suave);
+  opacity: 0;
+  animation: aparecer-bloque 4.2s ease-in-out var(--d) infinite;
+}
+@keyframes aparecer-bloque {
+  0%, 100% { opacity: 0; }
+  35%, 60% { opacity: 0.75; }
+}
+@media (min-width: 1100px) {
+  .deco i { width: 18px; }
+}
+@media (max-width: 680px) {
+  .deco i { width: 10px; }
+}
+
 /* ---------- Bloques ---------- */
 .bloque {
   position: relative;
@@ -346,6 +378,8 @@ pre.grafo { white-space: pre-wrap; overflow-wrap: anywhere; }
 <main>
 
   <section class="hero" id="inicio">
+    <div class="deco deco-izq" aria-hidden="true"><i style="--h:48px;--d:0s"></i><i style="--h:104px;--d:0.9s"></i><i style="--h:30px;--d:1.7s"></i><i style="--h:72px;--d:2.5s"></i></div>
+    <div class="deco deco-der" aria-hidden="true"><i style="--h:80px;--d:0.4s"></i><i style="--h:36px;--d:1.3s"></i><i style="--h:112px;--d:2.1s"></i><i style="--h:44px;--d:3s"></i></div>
     <div class="hero-grid">
       <div class="hero-texto">
         <p class="cmd"><span class="ps">sergio@portfolio:~$</span> neofetch</p>
