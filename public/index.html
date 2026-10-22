@@ -7,11 +7,8 @@
 <meta name="description" content="Portafolio de Sergio Morocho Perea, Técnico Superior en Desarrollo de Aplicaciones Multiplataforma.">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap">
 <style>
-/* Plan: página completa con estética de terminal, pero apagada. Fondo verde-negro suave, texto gris verdoso,
+/* Página completa con estética de terminal, apagada: fondo verde-negro suave, texto gris verdoso,
    un solo acento verde mate y líneas discontinuas en lugar de brillos. Todo en monoespaciada (JetBrains Mono).
-   Elementos visuales: ficha de sistema con logo en ASCII, idioma en barra, historial de formación con
-   forma de grafo, árbol de archivos de cada proyecto, tabla resumen, una fila de ventanas por grupo de aplicaciones
-   y divisores entre columnas.
    Nada parpadea de forma brusca. */
 :root {
   --bg: #0d1310;
@@ -68,6 +65,16 @@ a:hover { color: var(--fg); text-decoration-color: var(--acento); }
 .barra nav { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 13.5px; }
 .barra nav a { color: var(--apagado); text-decoration: none; }
 .barra nav a:hover { color: var(--acento); }
+.idioma-btn {
+  font-family: inherit;
+  font-size: 13px;
+  padding: 2px 10px;
+  background: transparent;
+  color: var(--acento);
+  border: 1px solid var(--borde-fuerte);
+  cursor: pointer;
+}
+.idioma-btn:hover { background: rgba(147, 201, 162, 0.12); color: var(--fg); }
 
 /* ---------- Portada: texto a la izquierda, ficha a la derecha en escritorio ---------- */
 .hero { padding: clamp(40px, 7vw, 90px) 0 clamp(24px, 4vw, 48px); position: relative; z-index: 1; }
@@ -109,7 +116,8 @@ a:hover { color: var(--fg); text-decoration-color: var(--acento); }
 .datos-sistema > div { display: grid; grid-template-columns: minmax(104px, 128px) minmax(0, 1fr); gap: 12px; }
 .datos-sistema dt { color: var(--apagado); }
 .datos-sistema dd { margin: 0; color: var(--fg); overflow-wrap: anywhere; }
-.nivel { letter-spacing: 0.08em; }
+.linea-idioma { display: block; }
+.nivel { letter-spacing: 0.08em; white-space: nowrap; }
 .nivel .on { color: var(--acento-suave); }
 .nivel .off { color: var(--apagado); }
 .nivel-texto { color: var(--apagado); margin-left: 6px; }
@@ -138,9 +146,10 @@ a:hover { color: var(--fg); text-decoration-color: var(--acento); }
 }
 .largo { font-size: clamp(16px, 1.8vw, 18px); max-width: 46em; }
 
-/* Doble fila: sobre_mi | contacto */
-.dobles { display: grid; grid-template-columns: minmax(0, 1fr); column-gap: 48px; }
-.dobles > .bloque { min-width: 0; }
+/* Sobre mí: bloque único centrado, con su cabecera sola en la fila. */
+#sobre-mi { max-width: 760px; margin-left: auto; margin-right: auto; text-align: center; }
+#sobre-mi .cmd, #sobre-mi .salida { margin-left: auto; margin-right: auto; }
+#sobre-mi pre.json { text-align: left; max-width: 480px; margin-left: auto; margin-right: auto; }
 
 /* Divisor grande entre dos columnas: sólo aparece donde el bloque va en dos columnas. */
 .divisor { display: none; position: relative; align-self: stretch; }
@@ -164,10 +173,6 @@ a:hover { color: var(--fg); text-decoration-color: var(--acento); }
   color: var(--acento-suave);
   font-size: 30px;
   line-height: 1;
-}
-@media (min-width: 1000px) {
-  .dobles { grid-template-columns: minmax(0, 1fr) 96px minmax(0, 1fr); column-gap: 0; align-items: stretch; }
-  .dobles .divisor { display: block; margin-top: clamp(48px, 7vw, 88px); }
 }
 
 pre.json, pre.grafo, pre.arbol, pre.tabla {
@@ -326,12 +331,13 @@ pre.tabla .cab { color: var(--acento); }
 <header class="barra">
   <a class="marca" href="#inicio">sergio@portfolio</a>
   <nav aria-label="Secciones">
-    <a href="#sobre-mi">./sobre_mi</a>
-    <a href="#contacto">./contacto</a>
-    <a href="#experiencia">./experiencia</a>
-    <a href="#habilidades">./habilidades</a>
-    <a href="#proyectos">./proyectos</a>
+    <a href="#sobre-mi" data-en="./about_me">./sobre_mi</a>
+    <a href="#experiencia" data-en="./experience">./experiencia</a>
+    <a href="#habilidades" data-en="./skills">./habilidades</a>
+    <a href="#proyectos" data-en="./projects">./proyectos</a>
+    <a href="#contacto" data-en="./contact">./contacto</a>
   </nav>
+  <button type="button" class="idioma-btn" id="idioma" aria-label="Cambiar a inglés">EN</button>
 </header>
 
 <main>
@@ -341,13 +347,13 @@ pre.tabla .cab { color: var(--acento); }
       <div class="hero-texto">
         <p class="cmd"><span class="ps">sergio@portfolio:~$</span> neofetch</p>
         <h1>SERGIO<br>MOROCHO PEREA</h1>
-        <p class="rol">Técnico Superior en Desarrollo de Aplicaciones Multiplataforma</p>
+        <p class="rol" data-en="Higher Technician in Multiplatform Application Development">Técnico Superior en Desarrollo de Aplicaciones Multiplataforma</p>
 
-        <p class="cmd" style="margin-top:28px"><span class="ps">sergio@portfolio:~$</span> cat presentacion.txt</p>
-        <p class="salida">Programo en Java y JavaScript. Me interesan la programación orientada a objetos, las bases de datos y las aplicaciones web.</p>
+        <p class="cmd" style="margin-top:28px" data-en='<span class="ps">sergio@portfolio:~$</span> cat presentation.txt'><span class="ps">sergio@portfolio:~$</span> cat presentacion.txt</p>
+        <p class="salida" data-en="I program in Java and JavaScript. I am interested in object-oriented programming, databases and web applications.">Programo en Java y JavaScript. Me interesan la programación orientada a objetos, las bases de datos y las aplicaciones web.</p>
         <p class="acciones">
-          <a href="#proyectos">ver proyectos</a>
-          <a href="#contacto">contacto</a>
+          <a href="#proyectos" data-en="view projects">ver proyectos</a>
+          <a href="#contacto" data-en="contact">contacto</a>
         </p>
         <p class="cursor"><span class="ps">sergio@portfolio:~$</span> <span class="blink" aria-hidden="true">█</span></p>
       </div>
@@ -363,19 +369,22 @@ pre.tabla .cab { color: var(--acento); }
 |____/  |_|  |_|</pre>
         <dl class="datos-sistema">
           <div>
-            <dt>ubicacion</dt>
-            <dd>Madrid, España</dd>
+            <dt data-en="location">ubicacion</dt>
+            <dd data-en="Madrid, Spain">Madrid, España</dd>
           </div>
           <div>
-            <dt>idioma</dt>
-            <dd><span class="nivel" aria-hidden="true"><span class="on">████</span><span class="off">░░</span></span><span class="nivel-texto">Inglés · B2, certificado por Cambridge</span></dd>
+            <dt data-en="language">idioma</dt>
+            <dd>
+              <span class="linea-idioma"><span class="nivel" aria-hidden="true">[<span class="on">##########</span>]</span> <span class="nivel-texto" data-en="Spanish · native">Español · nativo</span></span>
+              <span class="linea-idioma"><span class="nivel" aria-hidden="true">[<span class="on">#######</span><span class="off">...</span>]</span> <span class="nivel-texto" data-en="English · B2, Cambridge certified">Inglés · B2, certificado por Cambridge</span></span>
+            </dd>
           </div>
           <div>
-            <dt>lenguajes</dt>
+            <dt data-en="languages">lenguajes</dt>
             <dd>Java · JavaScript · Python · HTML · CSS · SQL</dd>
           </div>
           <div>
-            <dt>sistemas</dt>
+            <dt data-en="systems">sistemas</dt>
             <dd>Odoo ERP</dd>
           </div>
           <div>
@@ -383,21 +392,31 @@ pre.tabla .cab { color: var(--acento); }
             <dd>Git · GitHub · Docker · Maven</dd>
           </div>
           <div>
-            <dt>estado</dt>
-            <dd>buscando una empresa en la que aportar valor</dd>
+            <dt data-en="status">estado</dt>
+            <dd data-en="looking for a company where I can add value">buscando una empresa en la que aportar valor</dd>
           </div>
         </dl>
       </div>
     </div>
   </section>
 
-  <div class="dobles">
-
-    <section class="bloque reveal" id="sobre-mi">
-      <p class="cmd"><span class="ps">sergio@portfolio:~$</span> cat sobre_mi.txt</p>
-      <p class="salida largo">Soy un estudiante de programación, aficionado a ella desde pequeño, especializado en programación orientada a objetos y con conocimientos en base de datos y programación web. Busco una empresa en la que aportar todo el valor que pueda.</p>
-      <p class="cmd"><span class="ps">sergio@portfolio:~$</span> cat datos.json</p>
-      <pre class="json">{
+  <section class="bloque reveal" id="sobre-mi">
+    <p class="cmd" data-en='<span class="ps">sergio@portfolio:~$</span> cat about_me.txt'><span class="ps">sergio@portfolio:~$</span> cat sobre_mi.txt</p>
+    <p class="salida largo" data-en="I am a programming student, passionate about it since I was a child, specialized in object-oriented programming, with knowledge of databases and web programming. I am looking for a company where I can contribute all the value I can.">Soy un estudiante de programación, aficionado a ella desde pequeño, especializado en programación orientada a objetos y con conocimientos en base de datos y programación web. Busco una empresa en la que aportar todo el valor que pueda.</p>
+    <p class="cmd" data-en='<span class="ps">sergio@portfolio:~$</span> cat data.json'><span class="ps">sergio@portfolio:~$</span> cat datos.json</p>
+    <pre class="json" data-en='{
+  <span class="k">"license"</span>: <span class="v">"B (in progress)"</span>,
+  <span class="k">"traits"</span>: [
+    <span class="v">"disciplined"</span>,
+    <span class="v">"proactive"</span>,
+    <span class="v">"abstract thinking"</span>,
+    <span class="v">"eager to learn"</span>
+  ],
+  <span class="k">"outside_the_code"</span>: [
+    <span class="v">"video game design"</span>,
+    <span class="v">"fighting games"</span>
+  ]
+}'>{
   <span class="k">"carnet"</span>: <span class="v">"B (en curso)"</span>,
   <span class="k">"caracter"</span>: [
     <span class="v">"disciplinado"</span>,
@@ -410,41 +429,19 @@ pre.tabla .cab { color: var(--acento); }
     <span class="v">"juegos de lucha"</span>
   ]
 }</pre>
-    </section>
-
-    <div class="divisor" aria-hidden="true"></div>
-
-    <section class="bloque reveal contacto" id="contacto">
-      <p class="cmd"><span class="ps">sergio@portfolio:~$</span> ./contacto.sh</p>
-      <p class="salida">Busco una empresa en la que aportar todo el valor que pueda y seguir creciendo profesionalmente.</p>
-      <dl>
-        <div>
-          <dt>telefono</dt>
-          <dd><span id="tel">626 981 304</span> <button type="button" class="copiar" data-target="tel">copiar</button></dd>
-        </div>
-        <div>
-          <dt>correo</dt>
-          <dd><span id="mail">morochoperea.sergio@gmail.com</span> <button type="button" class="copiar" data-target="mail">copiar</button></dd>
-        </div>
-        <div>
-          <dt>ubicacion</dt>
-          <dd>Madrid, España</dd>
-        </div>
-        <div>
-          <dt>en-linea</dt>
-          <dd>
-            <a href="https://github.com/pochocho8" target="_blank" rel="noopener">github</a>
-            <a href="https://linkedin.com/in/sergio-morocho-perea-25511641a" target="_blank" rel="noopener">linkedin</a>
-          </dd>
-        </div>
-      </dl>
-    </section>
-
-  </div>
+  </section>
 
   <section class="bloque reveal" id="experiencia">
-    <p class="cmd"><span class="ps">sergio@portfolio:~$</span> git log --graph --oneline experiencia formacion</p>
-    <pre class="grafo">*   <span class="anio">2025 – actualidad</span>  <span class="nodo">Grado Superior en Desarrollo de Aplicaciones Multiplataforma</span>
+    <p class="cmd" data-en='<span class="ps">sergio@portfolio:~$</span> git log --graph --oneline experience education'><span class="ps">sergio@portfolio:~$</span> git log --graph --oneline experiencia formacion</p>
+    <pre class="grafo" data-en='*   <span class="anio">2025 – present</span>   <span class="nodo">Higher Vocational Degree in Multiplatform Application Development</span>
+|
+*   <span class="anio">courses</span>          <span class="nodo">Python Fundamentals 1 and 2</span> (Cisco Networking Academy)
+|
+*   <span class="anio">2023 – 2025</span>     <span class="nodo">Intermediate Vocational Degree in Microcomputer Systems and Networks</span>
+|\
+| *   <span class="anio">April 2023</span>     <span class="nodo">4th-year internship + Company</span> (Mechanical workshop)
+|
+*   <span class="anio">internship</span>     <span class="nodo">Intermediate Degree internship</span> (Centro de Estudios Butarque)'>*   <span class="anio">2025 – actualidad</span>  <span class="nodo">Grado Superior en Desarrollo de Aplicaciones Multiplataforma</span>
 |
 *   <span class="anio">cursos</span>             <span class="nodo">Fundamentos de Python 1 y 2</span> (Cisco Networking Academy)
 |
@@ -457,144 +454,144 @@ pre.tabla .cab { color: var(--acento); }
 
   <section class="bloque reveal" id="habilidades">
     <p class="cmd"><span class="ps">sergio@portfolio:~$</span> ls -la ~/apps/</p>
-    <p class="nota">Cada entrada es una aplicación o tecnología con la que trabajo. Los permisos son sólo decoración.</p>
+    <p class="nota" data-en="Each entry is an application or technology I work with. The permissions are just decoration.">Cada entrada es una aplicación o tecnología con la que trabajo. Los permisos son sólo decoración.</p>
 
     <div class="fila-apps">
 
       <div class="grupo-apps">
-        <p class="ruta">~/apps/lenguajes/</p>
+        <p class="ruta" data-en="~/apps/languages/">~/apps/lenguajes/</p>
         <div class="ventanas">
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">java</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
-            <p class="desc">POO: clases, herencia y polimorfismo</p>
+            <p class="desc" data-en="OOP: classes, inheritance and polymorphism">POO: clases, herencia y polimorfismo</p>
             <p class="perm">-rwxr-xr-x</p>
           </article>
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">javascript</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
-            <p class="desc">Interfaces y peticiones asíncronas</p>
+            <p class="desc" data-en="Interfaces and asynchronous requests">Interfaces y peticiones asíncronas</p>
             <p class="perm">-rwxr-xr-x</p>
           </article>
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">python</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
-            <p class="desc">Scripts con estructuras de datos y funciones</p>
+            <p class="desc" data-en="Scripts with data structures and functions">Scripts con estructuras de datos y funciones</p>
             <p class="perm">-rwxr-xr-x</p>
           </article>
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">html</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
-            <p class="desc">Estructura de páginas web responsivas</p>
+            <p class="desc" data-en="Structure of responsive web pages">Estructura de páginas web responsivas</p>
             <p class="perm">-rwxr-xr-x</p>
           </article>
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">css</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
-            <p class="desc">Maquetación y diseño de páginas</p>
+            <p class="desc" data-en="Layout and page design">Maquetación y diseño de páginas</p>
             <p class="perm">-rwxr-xr-x</p>
           </article>
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">jdbc</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
-            <p class="desc">Acceso a datos y persistencia desde Java</p>
+            <p class="desc" data-en="Data access and persistence from Java">Acceso a datos y persistencia desde Java</p>
             <p class="perm">-rwxr-xr-x</p>
           </article>
         </div>
       </div>
 
       <div class="grupo-apps">
-        <p class="ruta">~/apps/bases-de-datos/</p>
+        <p class="ruta" data-en="~/apps/databases/">~/apps/bases-de-datos/</p>
         <div class="ventanas">
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">mysql</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
-            <p class="desc">Bases de datos relacionales con DAO</p>
+            <p class="desc" data-en="Relational databases with DAO">Bases de datos relacionales con DAO</p>
             <p class="perm">-rwxr-xr-x</p>
           </article>
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">sql</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
-            <p class="desc">Tablas, relaciones, JOIN y subconsultas</p>
+            <p class="desc" data-en="Tables, relations, JOIN and subqueries">Tablas, relaciones, JOIN y subconsultas</p>
             <p class="perm">-rwxr-xr-x</p>
           </article>
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">microsoft-access</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
-            <p class="desc">Tablas, consultas, formularios e informes</p>
+            <p class="desc" data-en="Tables, queries, forms and reports">Tablas, consultas, formularios e informes</p>
             <p class="perm">-rwxr-xr-x</p>
           </article>
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">json</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
-            <p class="desc">Intercambio de datos entre aplicaciones</p>
+            <p class="desc" data-en="Data exchange between applications">Intercambio de datos entre aplicaciones</p>
             <p class="perm">-rwxr-xr-x</p>
           </article>
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">xml</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
-            <p class="desc">Datos estructurados con etiquetas</p>
+            <p class="desc" data-en="Structured data with tags">Datos estructurados con etiquetas</p>
             <p class="perm">-rwxr-xr-x</p>
           </article>
         </div>
       </div>
 
       <div class="grupo-apps">
-        <p class="ruta">~/apps/entornos-y-control-de-versiones/</p>
+        <p class="ruta" data-en="~/apps/environments-and-version-control/">~/apps/entornos-y-control-de-versiones/</p>
         <div class="ventanas">
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">intellij-idea</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
-            <p class="desc">Desarrollo de proyectos Java: depuración y gestión</p>
+            <p class="desc" data-en="Java project development: debugging and management">Desarrollo de proyectos Java: depuración y gestión</p>
             <p class="perm">-rwxr-xr-x</p>
           </article>
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">netbeans</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
-            <p class="desc">Desarrollo de proyectos Java: depuración y gestión</p>
+            <p class="desc" data-en="Java project development: debugging and management">Desarrollo de proyectos Java: depuración y gestión</p>
             <p class="perm">-rwxr-xr-x</p>
           </article>
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">android-studio</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
-            <p class="desc">Aplicaciones móviles Android: depuración y pruebas</p>
+            <p class="desc" data-en="Android mobile apps: debugging and testing">Aplicaciones móviles Android: depuración y pruebas</p>
             <p class="perm">-rwxr-xr-x</p>
           </article>
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">git</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
-            <p class="desc">Control de versiones: ramas y trabajo colaborativo</p>
+            <p class="desc" data-en="Version control: branches and collaborative work">Control de versiones: ramas y trabajo colaborativo</p>
             <p class="perm">-rwxr-xr-x</p>
           </article>
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">github</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
-            <p class="desc">Repositorios públicos y colaboración</p>
+            <p class="desc" data-en="Public repositories and collaboration">Repositorios públicos y colaboración</p>
             <p class="perm">-rwxr-xr-x</p>
           </article>
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">maven</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
-            <p class="desc">Construcción de proyectos Java</p>
+            <p class="desc" data-en="Building Java projects">Construcción de proyectos Java</p>
             <p class="perm">-rwxr-xr-x</p>
           </article>
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">docker</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
-            <p class="desc">Contenedores e imágenes; Docker Compose</p>
+            <p class="desc" data-en="Containers and images; Docker Compose">Contenedores e imágenes; Docker Compose</p>
             <p class="perm">-rwxr-xr-x</p>
           </article>
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">node-js</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
-            <p class="desc">Servidor de JavaScript</p>
+            <p class="desc" data-en="JavaScript server">Servidor de JavaScript</p>
             <p class="perm">-rwxr-xr-x</p>
           </article>
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">vs-code</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
-            <p class="desc">Editor de código</p>
+            <p class="desc" data-en="Code editor">Editor de código</p>
             <p class="perm">-rwxr-xr-x</p>
           </article>
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">codex</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
-            <p class="desc">IA en terminal para escribir y depurar código</p>
+            <p class="desc" data-en="AI in the terminal to write and debug code">IA en terminal para escribir y depurar código</p>
             <p class="perm">-rwxr-xr-x</p>
           </article>
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">qwen</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
-            <p class="desc">IA en terminal para documentar código</p>
+            <p class="desc" data-en="AI in the terminal to document code">IA en terminal para documentar código</p>
             <p class="perm">-rwxr-xr-x</p>
           </article>
         </div>
       </div>
 
       <div class="grupo-apps">
-        <p class="ruta">~/apps/sistemas/</p>
+        <p class="ruta" data-en="~/apps/systems/">~/apps/sistemas/</p>
         <div class="ventanas">
           <article class="ventana">
             <header class="ventana-cab"><span class="titulo">odoo-erp</span><span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>
-            <p class="desc">Gestión aplicada e integración de módulos</p>
+            <p class="desc" data-en="Applied management and module integration">Gestión aplicada e integración de módulos</p>
             <p class="perm">-rwxr-xr-x</p>
           </article>
         </div>
@@ -605,9 +602,9 @@ pre.tabla .cab { color: var(--acento); }
 
   <section class="bloque reveal" id="proyectos">
     <p class="cmd"><span class="ps">sergio@portfolio:~$</span> ls -l projects/</p>
-    <p class="nota">Proyectos personales con código público. Cada enlace lleva al repositorio.</p>
+    <p class="nota" data-en="Personal projects with public code. Each link goes to the repository.">Proyectos personales con código público. Cada enlace lleva al repositorio.</p>
 
-    <pre class="tabla"><span class="cab">proyecto            lenguaje    backend     gestor</span>
+    <pre class="tabla"><span class="cab" data-en="project             language    backend     manager">proyecto            lenguaje    backend     gestor</span>
 collection-tracker  java        jakarta-ee  maven
 dopmax              javascript  node-js     npm</pre>
 
@@ -625,7 +622,7 @@ dopmax              javascript  node-js     npm</pre>
 ├── <span class="dir">mysql/</span>
 └── <span class="dir">src/main/</span></pre>
         <h3>collection-tracker</h3>
-        <p class="salida">Aplicación web de gestión de colecciones personales. Registro e inicio de sesión, colecciones vinculadas a cada usuario, gestión de ítems y exploración de colecciones públicas. La interfaz se adapta a cualquier dispositivo.</p>
+        <p class="salida" data-en="Web app for managing personal collections. Sign-up and login, collections linked to each user, item management and browsing of public collections. The interface adapts to any device.">Aplicación web de gestión de colecciones personales. Registro e inicio de sesión, colecciones vinculadas a cada usuario, gestión de ítems y exploración de colecciones públicas. La interfaz se adapta a cualquier dispositivo.</p>
         <p class="stack">stack: java 21 · jakarta-ee · servlets · mysql · dao · javascript · maven · docker</p>
         <a class="enlace" href="https://github.com/pochocho8/colection-tracker" target="_blank" rel="noopener">github.com/pochocho8/colection-tracker</a>
       </article>
@@ -643,7 +640,7 @@ dopmax              javascript  node-js     npm</pre>
 ├── styles.css
 └── README.md</pre>
         <h3>dopmax</h3>
-        <p class="salida">Plataforma de vídeos con interfaz de contenido vertical. El servidor con Node.js ofrece una API para listar los vídeos disponibles y gestiona la subida de archivos.</p>
+        <p class="salida" data-en="Video platform with a vertical content interface. The Node.js server offers an API to list available videos and handles file uploads.">Plataforma de vídeos con interfaz de contenido vertical. El servidor con Node.js ofrece una API para listar los vídeos disponibles y gestiona la subida de archivos.</p>
         <p class="stack">stack: html · css · javascript · node-js</p>
         <a class="enlace" href="https://github.com/pochocho8/DopMax" target="_blank" rel="noopener">github.com/pochocho8/DopMax</a>
       </article>
@@ -651,11 +648,40 @@ dopmax              javascript  node-js     npm</pre>
     </div>
   </section>
 
-  <p class="pie"><span class="ps">sergio@portfolio:~$</span> exit 0 · Sergio Morocho Perea · Portafolio</p>
+  <section class="bloque reveal contacto" id="contacto">
+    <p class="cmd" data-en='<span class="ps">sergio@portfolio:~$</span> ./contact.sh'><span class="ps">sergio@portfolio:~$</span> ./contacto.sh</p>
+    <p class="salida" data-en="I am looking for a company where I can contribute all the value I can and keep growing professionally.">Busco una empresa en la que aportar todo el valor que pueda y seguir creciendo profesionalmente.</p>
+    <dl>
+      <div>
+        <dt data-en="phone">telefono</dt>
+        <dd><span id="tel">626 981 304</span> <button type="button" class="copiar" data-target="tel" data-en="copy">copiar</button></dd>
+      </div>
+      <div>
+        <dt data-en="email">correo</dt>
+        <dd><span id="mail">morochoperea.sergio@gmail.com</span> <button type="button" class="copiar" data-target="mail" data-en="copy">copiar</button></dd>
+      </div>
+      <div>
+        <dt data-en="location">ubicacion</dt>
+        <dd data-en="Madrid, Spain">Madrid, España</dd>
+      </div>
+      <div>
+        <dt data-en="online">en-linea</dt>
+        <dd>
+          <a href="https://github.com/pochocho8" target="_blank" rel="noopener">github</a>
+          <a href="https://linkedin.com/in/sergio-morocho-perea-25511641a" target="_blank" rel="noopener">linkedin</a>
+        </dd>
+      </div>
+    </dl>
+  </section>
+
+  <p class="pie" data-en='<span class="ps">sergio@portfolio:~$</span> exit 0 · Sergio Morocho Perea · Portfolio'><span class="ps">sergio@portfolio:~$</span> exit 0 · Sergio Morocho Perea · Portafolio</p>
 </main>
 
 <script>
 (function () {
+  var idioma = "es";
+  var btnIdioma = document.getElementById("idioma");
+
   function seleccionar(el) {
     var rango = document.createRange();
     rango.selectNodeContents(el);
@@ -663,23 +689,47 @@ dopmax              javascript  node-js     npm</pre>
     sel.removeAllRanges();
     sel.addRange(rango);
   }
+
+  // Guarda el HTML original en español de cada texto traducible.
+  document.querySelectorAll("[data-en]").forEach(function (el) {
+    el._es = el.innerHTML;
+  });
+
+  function aplicarIdioma(l) {
+    idioma = l;
+    document.documentElement.lang = l;
+    document.querySelectorAll("[data-en]").forEach(function (el) {
+      el.innerHTML = l === "en" ? el.getAttribute("data-en") : el._es;
+    });
+    btnIdioma.textContent = l === "en" ? "ES" : "EN";
+    btnIdioma.setAttribute("aria-label", l === "en" ? "Switch to Spanish" : "Cambiar a inglés");
+    document.title = l === "en" ? "Sergio Morocho Perea · Portfolio" : "Sergio Morocho Perea";
+  }
+
+  btnIdioma.addEventListener("click", function () {
+    aplicarIdioma(idioma === "es" ? "en" : "es");
+  });
+
   document.querySelectorAll("[data-target]").forEach(function (btn) {
-    var etiqueta = btn.textContent;
     var destino = document.getElementById(btn.getAttribute("data-target"));
     function marcar(texto) {
       btn.textContent = texto;
-      setTimeout(function () { btn.textContent = etiqueta; }, 1800);
+      setTimeout(function () {
+        btn.innerHTML = idioma === "en" ? btn.getAttribute("data-en") : btn._es;
+      }, 1800);
     }
     btn.addEventListener("click", function () {
       var valor = destino.textContent.trim();
+      var ok = idioma === "en" ? "copied" : "copiado";
+      var manual = idioma === "en" ? "select it" : "selecciónalo";
       try {
         navigator.clipboard.writeText(valor).then(
-          function () { marcar("copiado"); },
-          function () { seleccionar(destino); marcar("selecciónalo"); }
+          function () { marcar(ok); },
+          function () { seleccionar(destino); marcar(manual); }
         );
       } catch (e) {
         seleccionar(destino);
-        marcar("selecciónalo");
+        marcar(manual);
       }
     });
   });
