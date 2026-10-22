@@ -150,7 +150,7 @@ a:hover { color: var(--fg); text-decoration-color: var(--acento); }
 .deco i.der { right: calc(50% - 440px - var(--x) - var(--s)); }
 @keyframes respirar {
   0%, 100% { opacity: 0.05; }
-  50% { opacity: 0.7; }
+  50% { opacity: 0.6; }
 }
 @media (min-width: 1100px) {
   .deco { display: block; }
@@ -368,7 +368,7 @@ pre.grafo { white-space: pre-wrap; overflow-wrap: anywhere; }
 <main>
 
   <section class="hero" id="inicio">
-    <div class="deco" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="deco" aria-hidden="true"></div>
     <div class="hero-grid">
       <div class="hero-texto">
         <p class="cmd"><span class="ps">sergio@portfolio:~$</span> neofetch</p>
@@ -718,22 +718,31 @@ dopmax              javascript  node-js     npm</pre>
 </main>
 
 <script>
-// Cuadrados decorativos de la portada: lado, posición, tamaño y ritmo al azar; se recolocan en cada ciclo.
+// Cuadrados decorativos de la portada: se crean muchos en los márgenes laterales, con lado, posición,
+// tamaño y ritmo al azar. Cada uno se recoloca en otro punto al terminar su ciclo.
 (function () {
+  var hero = document.querySelector(".hero");
+  var deco = document.querySelector(".deco");
   function azar(a, b) { return a + Math.random() * (b - a); }
+  function margen() { return Math.max(0, (hero.clientWidth - 880) / 2); }
   function colocar(i) {
-    var s = Math.round(azar(12, 26));
+    var m = margen();
+    var s = Math.round(azar(12, 32));
+    var hueco = m - s - 4;
     i.className = Math.random() < 0.5 ? "izq" : "der";
     i.style.setProperty("--s", s + "px");
-    i.style.setProperty("--x", Math.round(azar(4, 90 - s)) + "px");
-    i.style.setProperty("--y", Math.round(azar(4, 88)) + "%");
+    i.style.setProperty("--x", (hueco > 0 ? Math.round(azar(0, hueco)) : 0) + "px");
+    i.style.setProperty("--y", Math.round(azar(0, 96)) + "%");
   }
-  document.querySelectorAll(".deco i").forEach(function (i) {
+  var total = Math.min(400, Math.round(2 * margen() * hero.clientHeight / 900));
+  for (var k = 0; k < total; k++) {
+    var i = document.createElement("i");
     colocar(i);
     i.style.setProperty("--t", azar(6, 14).toFixed(1) + "s");
     i.style.setProperty("--d", (-azar(0, 14)).toFixed(1) + "s");
-    i.addEventListener("animationiteration", function () { colocar(i); });
-  });
+    i.addEventListener("animationiteration", function (e) { colocar(e.currentTarget); });
+    deco.appendChild(i);
+  }
 })();
 
 (function () {
