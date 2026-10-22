@@ -134,36 +134,26 @@ a:hover { color: var(--fg); text-decoration-color: var(--acento); }
 .blink { color: var(--acento-suave); animation: pulso 1.8s ease-in-out infinite; }
 @keyframes pulso { 0%, 100% { opacity: 0.8; } 50% { opacity: 0.12; } }
 
-/* Bloques verdes sólidos a los lados de la portada: aparecen y desaparecen, cada uno con su retardo. */
-.deco {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  pointer-events: none;
-  z-index: 0;
-}
-.deco-izq { left: calc(-1 * max(16px, env(safe-area-inset-left, 0px))); }
-.deco-der { right: calc(-1 * max(16px, env(safe-area-inset-right, 0px))); align-items: flex-end; }
+/* Cuadrados verdes sólidos en los márgenes laterales de la portada: cada uno en un punto distinto,
+   cambiando muy despacio (decenas de segundos). Sólo en pantallas anchas, donde hay margen. */
+.deco { display: none; position: absolute; inset: 0; pointer-events: none; z-index: 0; }
 .deco i {
-  display: block;
-  width: 14px;
-  height: var(--h);
+  position: absolute;
+  top: var(--y);
+  width: var(--s);
+  height: var(--s);
   background: var(--acento-suave);
-  opacity: 0;
-  animation: aparecer-bloque 4.2s ease-in-out var(--d) infinite;
+  opacity: 0.4;
+  animation: respirar var(--t) ease-in-out var(--d) infinite;
 }
-@keyframes aparecer-bloque {
-  0%, 100% { opacity: 0; }
-  35%, 60% { opacity: 0.75; }
+.deco i.izq { left: calc(50% - 440px - var(--x) - var(--s)); }
+.deco i.der { right: calc(50% - 440px - var(--x) - var(--s)); }
+@keyframes respirar {
+  0%, 100% { opacity: 0.05; }
+  50% { opacity: 0.7; }
 }
 @media (min-width: 1100px) {
-  .deco i { width: 18px; }
-}
-@media (max-width: 680px) {
-  .deco i { width: 10px; }
+  .deco { display: block; }
 }
 
 /* ---------- Bloques ---------- */
@@ -378,8 +368,16 @@ pre.grafo { white-space: pre-wrap; overflow-wrap: anywhere; }
 <main>
 
   <section class="hero" id="inicio">
-    <div class="deco deco-izq" aria-hidden="true"><i style="--h:48px;--d:0s"></i><i style="--h:104px;--d:0.9s"></i><i style="--h:30px;--d:1.7s"></i><i style="--h:72px;--d:2.5s"></i></div>
-    <div class="deco deco-der" aria-hidden="true"><i style="--h:80px;--d:0.4s"></i><i style="--h:36px;--d:1.3s"></i><i style="--h:112px;--d:2.1s"></i><i style="--h:44px;--d:3s"></i></div>
+    <div class="deco" aria-hidden="true">
+      <i class="izq" style="--y:14%;--s:14px;--x:30px;--d:-12s;--t:44s"></i>
+      <i class="izq" style="--y:38%;--s:22px;--x:60px;--d:-30s;--t:58s"></i>
+      <i class="izq" style="--y:62%;--s:12px;--x:40px;--d:-6s;--t:36s"></i>
+      <i class="izq" style="--y:84%;--s:18px;--x:18px;--d:-40s;--t:66s"></i>
+      <i class="der" style="--y:22%;--s:18px;--x:24px;--d:-20s;--t:52s"></i>
+      <i class="der" style="--y:48%;--s:26px;--x:50px;--d:-48s;--t:70s"></i>
+      <i class="der" style="--y:72%;--s:14px;--x:36px;--d:-10s;--t:41s"></i>
+      <i class="der" style="--y:92%;--s:20px;--x:64px;--d:-34s;--t:60s"></i>
+    </div>
     <div class="hero-grid">
       <div class="hero-texto">
         <p class="cmd"><span class="ps">sergio@portfolio:~$</span> neofetch</p>
