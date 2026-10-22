@@ -727,14 +727,15 @@ dopmax              javascript  node-js     npm</pre>
   function margen() { return Math.max(0, (hero.clientWidth - 880) / 2); }
   function colocar(i) {
     var m = margen();
-    var s = Math.round(azar(12, 32));
+    var smax = Math.max(16, Math.min(64, m - 8));
+    var s = Math.round(azar(Math.min(28, smax - 1), smax));
     var hueco = m - s - 4;
     i.className = Math.random() < 0.5 ? "izq" : "der";
     i.style.setProperty("--s", s + "px");
     i.style.setProperty("--x", (hueco > 0 ? Math.round(azar(0, hueco)) : 0) + "px");
     i.style.setProperty("--y", Math.round(azar(0, 96)) + "%");
   }
-  var total = Math.min(400, Math.round(2 * margen() * hero.clientHeight / 900));
+  var total = Math.min(200, Math.round(2 * margen() * hero.clientHeight / 3000));
   for (var k = 0; k < total; k++) {
     var i = document.createElement("i");
     colocar(i);
