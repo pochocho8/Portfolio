@@ -886,7 +886,8 @@ dopmax              javascript  node-js     npm</pre>
     </div>
     <footer class="dialogo-pie">
       <button type="button" class="boton-accion" data-cerrar data-en="cancel">cancelar</button>
-      <button type="submit" class="boton-accion boton-principal" data-en="send">enviar</button>
+      <button type="button" class="boton-accion" id="enviar-gmail" data-en="send with Gmail">enviar con Gmail</button>
+      <button type="submit" class="boton-accion boton-principal" data-en="send with mail app">enviar con mi app de correo</button>
     </footer>
   </form>
 </dialog>
@@ -1090,6 +1091,16 @@ dopmax              javascript  node-js     npm</pre>
     var etiquetas = idioma === "en" ? ["Name: ", "Email: "] : ["Nombre: ", "Correo: "];
     var cuerpo = etiquetas[0] + d.get("nombre") + "\n" + etiquetas[1] + d.get("correo") + "\n\n" + d.get("mensaje");
     window.location.href = "mailto:" + destinoCorreo + "?subject=" + encodeURIComponent(d.get("asunto")) + "&body=" + encodeURIComponent(cuerpo);
+    formCorreo.reset();
+    cerrarDialogo();
+  });
+  document.getElementById("enviar-gmail").addEventListener("click", function () {
+    if (!formCorreo.reportValidity()) return;
+    var d = new FormData(formCorreo);
+    var etiquetas = idioma === "en" ? ["Name: ", "Email: "] : ["Nombre: ", "Correo: "];
+    var cuerpo = etiquetas[0] + d.get("nombre") + "\n" + etiquetas[1] + d.get("correo") + "\n\n" + d.get("mensaje");
+    window.open("https://mail.google.com/mail/?view=cm&fs=1&to=" + encodeURIComponent(destinoCorreo) +
+      "&su=" + encodeURIComponent(d.get("asunto")) + "&body=" + encodeURIComponent(cuerpo), "_blank", "noopener");
     formCorreo.reset();
     cerrarDialogo();
   });
