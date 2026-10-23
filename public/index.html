@@ -402,6 +402,20 @@ html[lang="en"] .i-es { display: none; }
   cursor: pointer;
 }
 .copiar:hover { background: var(--acento-velo); color: var(--fg); }
+.boton-accion { font: inherit; font-size: var(--txt-sm); min-height: 40px; padding: 6px 14px; background: transparent; color: var(--acento); border: 1px solid var(--borde-fuerte); cursor: pointer; }
+.boton-accion:hover { background: var(--acento-velo); color: var(--fg); }
+.boton-principal { background: var(--acento-velo); }
+/* Ventana para escribir un correo */
+.dialogo { width: min(560px, calc(100vw - 32px)); max-width: calc(100vw - 32px); max-height: calc(100vh - 32px); overflow-y: auto; padding: 0; border: 1px solid var(--borde-fuerte); background: var(--bg-2); color: var(--fg); font: inherit; }
+.dialogo::backdrop { background: rgba(8, 14, 11, 0.72); }
+.dialogo-cuerpo { display: grid; gap: 14px; padding: 18px 18px 4px; }
+.campo { display: grid; gap: 6px; }
+.campo > span { color: var(--apagado); }
+.campo input, .campo textarea { box-sizing: border-box; width: 100%; font: inherit; font-size: 16px; color: var(--fg); background: var(--bg); border: 1px solid var(--borde-fuerte); padding: 10px 12px; border-radius: 0; }
+.campo textarea { resize: vertical; min-height: 120px; }
+.campo input:focus-visible, .campo textarea:focus-visible { outline: 1px solid var(--acento-suave); outline-offset: 2px; }
+.dialogo-nota { margin: 0; color: var(--apagado); font-size: var(--txt-sm); }
+.dialogo-pie { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; padding: 14px 18px 18px; }
 
 .pie { position: relative; z-index: 1; margin: 72px 0 0; padding: 18px 0 40px; border-top: 1px dashed var(--borde-fuerte); color: var(--apagado); font-size: var(--txt-sm); }
 
@@ -838,7 +852,7 @@ dopmax              javascript  node-js     npm</pre>
       </div>
       <div>
         <dt data-en="email">correo</dt>
-        <dd><span id="mail">morochoperea.sergio@gmail.com</span> <button type="button" class="copiar" data-target="mail" data-en="copy">copiar</button></dd>
+        <dd><span id="mail">morochoperea.sergio@gmail.com</span> <button type="button" class="boton-accion" id="abrir-correo" aria-haspopup="dialog" aria-controls="dialogo-correo" data-en="write email">escribir correo</button></dd>
       </div>
       <div>
         <dt data-en="location">ubicacion</dt>
@@ -856,6 +870,26 @@ dopmax              javascript  node-js     npm</pre>
 
   <p class="pie" data-en='<span class="ps">sergio@portfolio:~$</span> exit 0 · Sergio Morocho Perea · Portfolio'><span class="ps">sergio@portfolio:~$</span> exit 0 · Sergio Morocho Perea · Portafolio</p>
 </main>
+
+<dialog class="dialogo" id="dialogo-correo" aria-labelledby="dialogo-titulo">
+  <form id="form-correo">
+    <header class="ventana-cab">
+      <span class="titulo" id="dialogo-titulo" data-en="new message">nuevo mensaje</span>
+      <button type="button" class="boton-accion" data-cerrar data-en="[ close ]">[ cerrar ]</button>
+    </header>
+    <div class="dialogo-cuerpo">
+      <label class="campo"><span data-en="name">nombre</span><input type="text" name="nombre" required autocomplete="name"></label>
+      <label class="campo"><span data-en="your email">tu correo</span><input type="email" name="correo" required autocomplete="email"></label>
+      <label class="campo"><span data-en="subject">asunto</span><input type="text" name="asunto" required></label>
+      <label class="campo"><span data-en="message">mensaje</span><textarea name="mensaje" rows="6" required></textarea></label>
+      <p class="dialogo-nota" data-en="Your mail app will open with the message ready to send.">Se abrirá tu aplicación de correo con el mensaje listo para enviar.</p>
+    </div>
+    <footer class="dialogo-pie">
+      <button type="button" class="boton-accion" data-cerrar data-en="cancel">cancelar</button>
+      <button type="submit" class="boton-accion boton-principal" data-en="send">enviar</button>
+    </footer>
+  </form>
+</dialog>
 
 <script>
 // Diagonales de cuadrados en los márgenes laterales. A la izquierda la diagonal baja hacia el contenido;
@@ -1030,6 +1064,34 @@ dopmax              javascript  node-js     npm</pre>
         marcar(manual);
       }
     });
+  });
+
+  // Ventana para escribir un correo. Al enviar se abre el cliente de correo del visitante con el mensaje preparado.
+  var dialogo = document.getElementById("dialogo-correo");
+  var formCorreo = document.getElementById("form-correo");
+  var botonAbrir = document.getElementById("abrir-correo");
+  var destinoCorreo = document.getElementById("mail").textContent.trim();
+
+  function abrirDialogo() {
+    if (typeof dialogo.showModal !== "function") { window.location.href = "mailto:" + destinoCorreo; return; }
+    dialogo.showModal();
+    formCorreo.querySelector("input").focus();
+  }
+  function cerrarDialogo() {
+    dialogo.close();
+    botonAbrir.focus();
+  }
+  botonAbrir.addEventListener("click", abrirDialogo);
+  dialogo.querySelectorAll("[data-cerrar]").forEach(function (b) { b.addEventListener("click", cerrarDialogo); });
+  dialogo.addEventListener("click", function (e) { if (e.target === dialogo) cerrarDialogo(); });
+  formCorreo.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var d = new FormData(formCorreo);
+    var etiquetas = idioma === "en" ? ["Name: ", "Email: "] : ["Nombre: ", "Correo: "];
+    var cuerpo = etiquetas[0] + d.get("nombre") + "\n" + etiquetas[1] + d.get("correo") + "\n\n" + d.get("mensaje");
+    window.location.href = "mailto:" + destinoCorreo + "?subject=" + encodeURIComponent(d.get("asunto")) + "&body=" + encodeURIComponent(cuerpo);
+    formCorreo.reset();
+    cerrarDialogo();
   });
 })();
 </script>
