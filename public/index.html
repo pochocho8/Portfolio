@@ -292,6 +292,16 @@ pre.grafo { white-space: pre-wrap; overflow-wrap: anywhere; }
   text-overflow: ellipsis;
 }
 
+/* ---------- Insignias de Credly: una ventana por insignia, con la altura que pida su contenido ---------- */
+.ventana.insignia { flex: 0 0 300px; width: 300px; max-width: 100%; aspect-ratio: auto; min-height: 200px; }
+.ventana.insignia .desc { overflow: visible; }
+.ins-linea { margin: 0 0 8px; font-size: 13px; color: var(--fg); }
+.ins-tags { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.ins-tags li { border: 1px solid var(--borde-fuerte); padding: 2px 8px; font-size: 12px; color: var(--acento-suave); }
+.ins-desc { margin: 0 0 6px; font-size: 13px; line-height: 1.45; }
+html:not([lang="en"]) .i-en { display: none; }
+html[lang="en"] .i-es { display: none; }
+
 /* ---------- Proyectos: dos tarjetas en doble fila ---------- */
 .dobles-proyectos { display: grid; grid-template-columns: minmax(0, 1fr); align-items: stretch; }
 @media (min-width: 1000px) {
@@ -369,6 +379,7 @@ pre.grafo { white-space: pre-wrap; overflow-wrap: anywhere; }
     <a href="#sobre-mi" data-en="./about_me">./sobre_mi</a>
     <a href="#experiencia" data-en="./experience">./experiencia</a>
     <a href="#habilidades" data-en="./skills">./habilidades</a>
+    <a href="#insignias" data-en="./badges">./insignias</a>
     <a href="#proyectos" data-en="./projects">./proyectos</a>
     <a href="#contacto" data-en="./contact">./contacto</a>
   </nav>
@@ -658,6 +669,12 @@ pre.grafo { white-space: pre-wrap; overflow-wrap: anywhere; }
     </div>
   </section>
 
+  <section class="bloque reveal" id="insignias">
+    <p class="cmd" data-en='<span class="ps">sergio@portfolio:~$</span> ls -l ~/badges/'><span class="ps">sergio@portfolio:~$</span> ls -l ~/insignias/</p>
+    <p class="nota" data-en="Verified badges. Each window is one badge; the link goes to my Credly profile.">Insignias verificadas. Cada ventana es una insignia; el enlace lleva a mi perfil de Credly.</p>
+    <div class="ventanas" id="insignias-lista"></div>
+  </section>
+
   <section class="bloque reveal" id="proyectos">
     <p class="cmd"><span class="ps">sergio@portfolio:~$</span> ls -l projects/</p>
     <p class="nota" data-en="Personal projects with public code. Each link goes to the repository.">Proyectos personales con código público. Cada enlace lleva al repositorio.</p>
@@ -776,6 +793,55 @@ dopmax              javascript  node-js     npm</pre>
     banda(0, 1, "var(--acento-suave)");
     banda(13, 0.55, "var(--apagado)");
   }
+})();
+
+// Insignias de Credly. Para añadir una, copia un objeto de la lista y rellena sus campos en ambos idiomas.
+// Si un campo no aplica (por ejemplo la fecha), déjalo vacío. La sección se genera sola.
+(function () {
+  var INSIGNIAS = [
+    {
+      nombre: "Python Essentials 1",
+      emisor: "Cisco Networking Academy",
+      verificada: true,
+      tipo: { es: "Aprendizaje", en: "Learning" },
+      nivel: { es: "Intermedio", en: "Intermediate" },
+      descripcion: {
+        es: "Cisco, junto con OpenEDG Python Institute, certifica que completaste el curso Python Essentials 1 y obtuviste la credencial de nivel estudiante.",
+        en: "Cisco, with OpenEDG Python Institute, certifies that you completed the Python Essentials 1 course and earned the student-level credential."
+      },
+      habilidades: ["Algorithmic Thinking", "Analytical Thinking", "Basic Python Programming", "Best Practices in Programming", "Computer Programming", "Design, Develop, and Debug Scripts", "Entry-level", "Procedural Programming", "Python"],
+      fecha: "",
+      url: "https://www.credly.com/users/sergio-morocho"
+    }
+  ];
+
+  function esc(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+  // Texto en español e inglés; el idioma de la página decide cuál se muestra (CSS).
+  function bi(es, en) {
+    return '<span class="i-es">' + esc(es) + '</span><span class="i-en">' + esc(en) + '</span>';
+  }
+
+  var lista = document.getElementById("insignias-lista");
+  lista.innerHTML = INSIGNIAS.map(function (b) {
+    var emisor = bi(b.emisor + (b.verificada ? " · [verificada]" : ""), b.emisor + (b.verificada ? " · [verified]" : ""));
+    var meta = bi("tipo: " + b.tipo.es + " · nivel: " + b.nivel.es, "type: " + b.tipo.en + " · level: " + b.nivel.en);
+    var fecha = b.fecha ? '<p class="ins-linea">' + bi("fecha: " + b.fecha, "date: " + b.fecha) + '</p>' : "";
+    var tags = b.habilidades.map(function (h) { return "<li>" + esc(h) + "</li>"; }).join("");
+    return '<article class="ventana insignia">' +
+      '<header class="ventana-cab"><span class="titulo">' + esc(b.nombre) + '</span>' +
+        '<span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>' +
+      '<div class="desc">' +
+        '<p class="ins-linea">' + emisor + '</p>' +
+        '<p class="ins-linea">' + meta + '</p>' +
+        fecha +
+        '<p class="ins-desc">' + bi(b.descripcion.es, b.descripcion.en) + '</p>' +
+        '<ul class="ins-tags">' + tags + '</ul>' +
+      '</div>' +
+      '<p class="perm"><a href="' + esc(b.url) + '" target="_blank" rel="noopener">' + bi("[ver en Credly]", "[view on Credly]") + '</a></p>' +
+    '</article>';
+  }).join("");
 })();
 
 (function () {
