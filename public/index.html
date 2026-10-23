@@ -19,6 +19,15 @@
   --apagado: #6f9180;
   --borde: rgba(147, 201, 162, 0.16);
   --borde-fuerte: rgba(147, 201, 162, 0.3);
+  /* Velos del acento para hover y fondos */
+  --acento-velo: var(--acento-velo);
+  --acento-velo-suave: var(--acento-velo-suave);
+  --fondo-tarjeta: #0f1712;
+  /* Escala tipográfica: 12 / 13 / 14.5 / 15.5 px */
+  --txt-xs: 12px;
+  --txt-sm: 13px;
+  --txt-md: 14.5px;
+  --txt-lg: 15.5px;
   color-scheme: dark;
 }
 html { background: var(--bg); scroll-behavior: smooth; scroll-padding-top: 64px; }
@@ -27,7 +36,7 @@ body {
   background: var(--bg);
   color: var(--fg);
   font-family: "JetBrains Mono", "Fira Code", ui-monospace, Menlo, Consolas, monospace;
-  font-size: 15.5px;
+  font-size: var(--txt-lg);
   line-height: 1.7;
   overflow-x: hidden;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
@@ -37,12 +46,12 @@ body {
 a { color: var(--acento); text-decoration: underline; text-decoration-color: var(--borde-fuerte); text-underline-offset: 4px; }
 a:hover { color: var(--fg); text-decoration-color: var(--acento); }
 :focus-visible { outline: 1px solid var(--acento-suave); outline-offset: 4px; }
-::selection { background: var(--acento-suave); color: #0d1310; }
+::selection { background: var(--acento-suave); color: var(--bg); }
 
 .ps { color: var(--acento-suave); }
 .cmd { margin: 0 0 14px; color: var(--fg); overflow-wrap: anywhere; }
 .salida { margin: 0 0 18px; max-width: 60em; overflow-wrap: anywhere; }
-.nota { color: var(--apagado); font-size: 14px; margin: -6px 0 18px; }
+.nota { color: var(--apagado); font-size: var(--txt-md); margin: -6px 0 18px; }
 
 /* ---------- Barra superior ---------- */
 .barra {
@@ -62,14 +71,14 @@ a:hover { color: var(--fg); text-decoration-color: var(--acento); }
   background: var(--bg);
 }
 .barra .marca { color: var(--acento); font-weight: 700; text-decoration: none; }
-.barra nav { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 13.5px; }
+.barra nav { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: var(--txt-sm); }
 .barra nav a { display: inline-block; min-height: 24px; line-height: 24px; color: var(--apagado); text-decoration: none; }
 .barra nav a:hover { color: var(--acento); }
 /* Menú de idioma: ./idioma en la barra. Despliega las opciones sin llevar a ninguna sección. */
 .menu-idioma { position: relative; }
 .menu-btn {
   font: inherit;
-  font-size: 13.5px;
+  font-size: var(--txt-sm);
   line-height: 24px;
   min-height: 24px;
   padding: 0;
@@ -107,7 +116,7 @@ a:hover { color: var(--fg); text-decoration-color: var(--acento); }
   min-height: 32px;
   padding: 8px 14px;
   font: inherit;
-  font-size: 13.5px;
+  font-size: var(--txt-sm);
   text-align: left;
   white-space: nowrap;
   background: none;
@@ -115,7 +124,7 @@ a:hover { color: var(--fg); text-decoration-color: var(--acento); }
   color: var(--fg);
   cursor: pointer;
 }
-.menu-op:hover, .menu-op:focus-visible { background: rgba(147, 201, 162, 0.12); color: var(--acento); }
+.menu-op:hover, .menu-op:focus-visible { background: var(--acento-velo); color: var(--acento); }
 .marca-op { color: var(--acento-suave); }
 
 /* ---------- Portada: texto a la izquierda, ficha a la derecha en escritorio ---------- */
@@ -149,7 +158,7 @@ a:hover { color: var(--fg); text-decoration-color: var(--acento); }
 .logo {
   margin: 0;
   color: var(--acento-suave);
-  font-size: 13px;
+  font-size: var(--txt-sm);
   line-height: 1.35;
   white-space: pre;
 }
@@ -171,7 +180,7 @@ a:hover { color: var(--fg); text-decoration-color: var(--acento); }
   text-decoration: none;
   transition: background 0.2s ease, color 0.2s ease;
 }
-.acciones a:hover { background: rgba(147, 201, 162, 0.12); color: var(--fg); }
+.acciones a:hover { background: var(--acento-velo); color: var(--fg); }
 .cursor { margin: 28px 0 0; }
 .blink { color: var(--acento-suave); animation: pulso 1.8s ease-in-out infinite; }
 @keyframes pulso { 0%, 100% { opacity: 0.8; } 50% { opacity: 0.12; } }
@@ -255,7 +264,7 @@ pre.json, pre.grafo, pre.arbol, pre.tabla {
   border: 1px solid var(--borde);
   color: var(--fg);
   font-family: inherit;
-  font-size: 14px;
+  font-size: var(--txt-md);
   line-height: 1.55;
   overflow-x: auto;
   max-width: 100%;
@@ -269,7 +278,7 @@ pre.tabla .cab { color: var(--acento); }
 pre.grafo { white-space: pre-wrap; overflow-wrap: anywhere; }
 
 /* ---------- Habilidades: cada grupo es una cuadrícula de ventanas que pasa a otra fila según el ancho ---------- */
-.ruta { color: var(--acento-suave); margin: 22px 0 12px; font-size: 14.5px; overflow-wrap: anywhere; }
+.ruta { color: var(--acento-suave); margin: 22px 0 12px; font-size: var(--txt-md); overflow-wrap: anywhere; }
 .ruta::after { content: " (" attr(data-n) ")"; color: var(--apagado); }
 .fila-apps { display: grid; gap: 4px; }
 .grupo-apps { min-width: 0; padding-bottom: 14px; border-bottom: 1px dashed var(--borde); }
@@ -292,7 +301,7 @@ pre.grafo { white-space: pre-wrap; overflow-wrap: anywhere; }
   background: var(--bg-2);
   transition: border-color 0.2s ease;
 }
-.ventana:nth-child(even) { background: #0f1712; }
+.ventana:nth-child(even) { background: var(--fondo-tarjeta); }
 .ventana:hover { border-color: var(--acento-suave); }
 .ventana-cab {
   display: flex;
@@ -302,8 +311,8 @@ pre.grafo { white-space: pre-wrap; overflow-wrap: anywhere; }
   margin: 0;
   padding: 6px 10px;
   border-bottom: 1px solid var(--borde);
-  background: rgba(147, 201, 162, 0.06);
-  font-size: 12px;
+  background: var(--acento-velo-suave);
+  font-size: var(--txt-xs);
   font-weight: 600;
   line-height: 1.35;
   color: var(--acento);
@@ -318,7 +327,7 @@ pre.grafo { white-space: pre-wrap; overflow-wrap: anywhere; }
   padding: 10px 12px;
   overflow: hidden;
   color: var(--fg);
-  font-size: 13px;
+  font-size: var(--txt-sm);
   line-height: 1.45;
   overflow-wrap: anywhere;
 }
@@ -327,26 +336,26 @@ pre.grafo { white-space: pre-wrap; overflow-wrap: anywhere; }
   padding: 6px 10px;
   border-top: 1px dashed var(--borde);
   color: var(--apagado);
-  font-size: 12.5px;
+  font-size: var(--txt-sm);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 /* ---------- Insignias de Credly: una ventana por insignia, con la altura que pida su contenido ---------- */
-.ventana.insignia { flex: 1 1 100%; width: auto; max-width: 100%; aspect-ratio: auto; min-height: 0; }
-.ventana.insignia .desc { overflow: visible; padding: 0; }
-.ins-cuerpo { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 0 24px; align-items: start; padding: 16px 18px 12px; }
-.ins-foto { margin: 0; }
-.ins-foto img { display: block; width: 100%; max-width: 180px; height: auto; }
+.ventana.certificacion { flex: 1 1 100%; width: auto; max-width: 100%; aspect-ratio: auto; min-height: 0; }
+.ventana.certificacion .desc { overflow: visible; padding: 0; }
+.cert-cuerpo { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 0 24px; align-items: start; padding: 16px 18px 12px; }
+.cert-foto { margin: 0; }
+.cert-foto img { display: block; width: 100%; max-width: 180px; height: auto; }
 @media (max-width: 680px) {
-  .ins-cuerpo { grid-template-columns: minmax(0, 1fr); gap: 14px; }
-  .ins-foto img { max-width: 150px; }
+  .cert-cuerpo { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .cert-foto img { max-width: 150px; }
 }
-.ins-linea { margin: 0 0 8px; font-size: 13px; color: var(--fg); }
-.ins-tags { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
-.ins-tags li { border: 1px solid var(--borde-fuerte); padding: 2px 8px; font-size: 12px; color: var(--acento-suave); }
-.ins-desc { margin: 0 0 6px; font-size: 13px; line-height: 1.45; }
+.cert-linea { margin: 0 0 8px; font-size: var(--txt-sm); color: var(--fg); }
+.cert-tags { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.cert-tags li { border: 1px solid var(--borde-fuerte); padding: 2px 8px; font-size: var(--txt-xs); color: var(--acento-suave); }
+.cert-desc { margin: 0 0 6px; font-size: var(--txt-sm); line-height: 1.45; }
 html:not([lang="en"]) .i-en { display: none; }
 html[lang="en"] .i-es { display: none; }
 
@@ -364,7 +373,7 @@ html[lang="en"] .i-es { display: none; }
   min-width: 0;
 }
 .proyecto h3 { margin: 4px 0 10px; color: var(--acento); font-size: clamp(20px, 2.4vw, 26px); font-weight: 600; overflow-wrap: anywhere; }
-.proyecto .stack { color: var(--acento-suave); font-size: 14px; margin: 14px 0 14px; overflow-wrap: anywhere; }
+.proyecto .stack { color: var(--acento-suave); font-size: var(--txt-md); margin: 14px 0 14px; overflow-wrap: anywhere; }
 .proyecto .enlace { font-weight: 600; }
 
 /* ---------- Contacto ---------- */
@@ -374,7 +383,7 @@ html[lang="en"] .i-es { display: none; }
 .contacto dd { margin: 0; color: var(--fg); overflow-wrap: anywhere; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
 .copiar {
   font-family: inherit;
-  font-size: 13px;
+  font-size: var(--txt-sm);
   min-height: 28px;
   padding: 4px 12px;
   background: transparent;
@@ -382,9 +391,9 @@ html[lang="en"] .i-es { display: none; }
   border: 1px solid var(--borde-fuerte);
   cursor: pointer;
 }
-.copiar:hover { background: rgba(147, 201, 162, 0.12); color: var(--fg); }
+.copiar:hover { background: var(--acento-velo); color: var(--fg); }
 
-.pie { position: relative; z-index: 1; margin: 72px 0 0; padding: 18px 0 40px; border-top: 1px dashed var(--borde-fuerte); color: var(--apagado); font-size: 13.5px; }
+.pie { position: relative; z-index: 1; margin: 72px 0 0; padding: 18px 0 40px; border-top: 1px dashed var(--borde-fuerte); color: var(--apagado); font-size: var(--txt-sm); }
 
 /* ---------- Movimiento ---------- */
 @supports (animation-timeline: view()) {
@@ -399,16 +408,16 @@ html[lang="en"] .i-es { display: none; }
   }
 }
 @media (max-width: 680px) {
-  body { font-size: 14.5px; }
+  body { font-size: var(--txt-md); }
   .ficha { grid-template-columns: minmax(0, 1fr); padding: 18px 16px; }
-  .logo { font-size: 11.5px; }
+  .logo { font-size: var(--txt-xs); }
   .datos-sistema > div { grid-template-columns: minmax(0, 1fr); gap: 0; }
   .contacto dl > div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
-  .barra nav { font-size: 12.5px; gap: 4px 14px; }
+  .barra nav { font-size: var(--txt-sm); gap: 4px 14px; }
   .proyecto { padding: 18px 16px; }
 }
 @media (max-width: 900px) {
-  pre.grafo { font-size: 13px; }
+  pre.grafo { font-size: var(--txt-sm); }
 }
 @media (max-width: 600px) {
   .ventana { flex-basis: 170px; width: 170px; }
@@ -882,19 +891,19 @@ dopmax              javascript  node-js     npm</pre>
   lista.innerHTML = INSIGNIAS.map(function (b) {
     var emisor = bi(b.emisor + (b.verificada ? " · [verificada]" : ""), b.emisor + (b.verificada ? " · [verified]" : ""));
     var meta = bi("tipo: " + b.tipo.es + " · nivel: " + b.nivel.es, "type: " + b.tipo.en + " · level: " + b.nivel.en);
-    var fecha = b.fecha ? '<p class="ins-linea">' + bi("fecha: " + b.fecha, "date: " + b.fecha) + '</p>' : "";
+    var fecha = b.fecha ? '<p class="cert-linea">' + bi("fecha: " + b.fecha, "date: " + b.fecha) + '</p>' : "";
     var tags = b.habilidades.map(function (h) { return "<li>" + esc(h) + "</li>"; }).join("");
-    var foto = b.imagen ? '<figure class="ins-foto"><img src="' + esc(b.imagen) + '" alt="Medalla ' + esc(b.nombre) + '" width="180" height="180" loading="lazy"></figure>' : "";
-    return '<article class="ventana insignia">' +
+    var foto = b.imagen ? '<figure class="cert-foto"><img src="' + esc(b.imagen) + '" alt="Medalla ' + esc(b.nombre) + '" width="180" height="180" loading="lazy"></figure>' : "";
+    return '<article class="ventana certificacion">' +
       '<header class="ventana-cab"><span class="titulo">' + esc(b.nombre) + '</span>' +
         '<span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>' +
-      '<div class="ins-cuerpo">' + foto +
+      '<div class="cert-cuerpo">' + foto +
         '<div class="desc">' +
-          '<p class="ins-linea">' + emisor + '</p>' +
-          '<p class="ins-linea">' + meta + '</p>' +
+          '<p class="cert-linea">' + emisor + '</p>' +
+          '<p class="cert-linea">' + meta + '</p>' +
           fecha +
-          '<p class="ins-desc">' + bi(b.descripcion.es, b.descripcion.en) + '</p>' +
-          '<ul class="ins-tags">' + tags + '</ul>' +
+          '<p class="cert-desc">' + bi(b.descripcion.es, b.descripcion.en) + '</p>' +
+          '<ul class="cert-tags">' + tags + '</ul>' +
         '</div>' +
       '</div>' +
       '<p class="perm"><a href="' + esc(b.url) + '" target="_blank" rel="noopener">' + bi("[ver en Credly]", "[view on Credly]") + '</a></p>' +
