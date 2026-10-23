@@ -75,8 +75,17 @@ a:hover { color: var(--fg); text-decoration-color: var(--acento); }
   padding: 0;
   background: none;
   border: 0;
-  color: var(--apagado);
+  color: var(--acento-suave);
   cursor: pointer;
+}
+.menu-btn::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 8px;
+  vertical-align: middle;
+  background: var(--acento);
 }
 .menu-btn:hover, .menu-btn[aria-expanded="true"] { color: var(--acento); }
 .menu-lista {
