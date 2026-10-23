@@ -293,8 +293,15 @@ pre.grafo { white-space: pre-wrap; overflow-wrap: anywhere; }
 }
 
 /* ---------- Insignias de Credly: una ventana por insignia, con la altura que pida su contenido ---------- */
-.ventana.insignia { flex: 0 0 300px; width: 300px; max-width: 100%; aspect-ratio: auto; min-height: 200px; }
-.ventana.insignia .desc { overflow: visible; }
+.ventana.insignia { flex: 1 1 100%; width: auto; max-width: 100%; aspect-ratio: auto; min-height: 0; }
+.ventana.insignia .desc { overflow: visible; padding: 0; }
+.ins-cuerpo { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 0 24px; align-items: start; padding: 16px 18px 12px; }
+.ins-foto { margin: 0; }
+.ins-foto img { display: block; width: 100%; max-width: 180px; height: auto; }
+@media (max-width: 680px) {
+  .ins-cuerpo { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .ins-foto img { max-width: 150px; }
+}
 .ins-linea { margin: 0 0 8px; font-size: 13px; color: var(--fg); }
 .ins-tags { list-style: none; margin: 10px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
 .ins-tags li { border: 1px solid var(--borde-fuerte); padding: 2px 8px; font-size: 12px; color: var(--acento-suave); }
@@ -811,6 +818,7 @@ dopmax              javascript  node-js     npm</pre>
       },
       habilidades: ["Algorithmic Thinking", "Analytical Thinking", "Basic Python Programming", "Best Practices in Programming", "Computer Programming", "Design, Develop, and Debug Scripts", "Entry-level", "Procedural Programming", "Python"],
       fecha: "",
+      imagen: "img/insignia-python-essentials-1.png",
       url: "https://www.credly.com/users/sergio-morocho"
     }
   ];
@@ -829,15 +837,18 @@ dopmax              javascript  node-js     npm</pre>
     var meta = bi("tipo: " + b.tipo.es + " · nivel: " + b.nivel.es, "type: " + b.tipo.en + " · level: " + b.nivel.en);
     var fecha = b.fecha ? '<p class="ins-linea">' + bi("fecha: " + b.fecha, "date: " + b.fecha) + '</p>' : "";
     var tags = b.habilidades.map(function (h) { return "<li>" + esc(h) + "</li>"; }).join("");
+    var foto = b.imagen ? '<figure class="ins-foto"><img src="' + esc(b.imagen) + '" alt="Medalla ' + esc(b.nombre) + '" width="180" height="180" loading="lazy"></figure>' : "";
     return '<article class="ventana insignia">' +
       '<header class="ventana-cab"><span class="titulo">' + esc(b.nombre) + '</span>' +
         '<span class="controles" aria-hidden="true"><i></i><i></i><i></i></span></header>' +
-      '<div class="desc">' +
-        '<p class="ins-linea">' + emisor + '</p>' +
-        '<p class="ins-linea">' + meta + '</p>' +
-        fecha +
-        '<p class="ins-desc">' + bi(b.descripcion.es, b.descripcion.en) + '</p>' +
-        '<ul class="ins-tags">' + tags + '</ul>' +
+      '<div class="ins-cuerpo">' + foto +
+        '<div class="desc">' +
+          '<p class="ins-linea">' + emisor + '</p>' +
+          '<p class="ins-linea">' + meta + '</p>' +
+          fecha +
+          '<p class="ins-desc">' + bi(b.descripcion.es, b.descripcion.en) + '</p>' +
+          '<ul class="ins-tags">' + tags + '</ul>' +
+        '</div>' +
       '</div>' +
       '<p class="perm"><a href="' + esc(b.url) + '" target="_blank" rel="noopener">' + bi("[ver en Credly]", "[view on Credly]") + '</a></p>' +
     '</article>';
