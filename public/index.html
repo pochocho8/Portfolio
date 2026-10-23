@@ -882,12 +882,11 @@ dopmax              javascript  node-js     npm</pre>
       <label class="campo"><span data-en="your email">tu correo</span><input type="email" name="correo" required autocomplete="email"></label>
       <label class="campo"><span data-en="subject">asunto</span><input type="text" name="asunto" required></label>
       <label class="campo"><span data-en="message">mensaje</span><textarea name="mensaje" rows="6" required></textarea></label>
-      <p class="dialogo-nota" data-en="Your mail app will open with the message ready to send.">Se abrirá tu aplicación de correo con el mensaje listo para enviar.</p>
+      <p class="dialogo-nota" data-en="Gmail will open with the message ready to send.">Se abrirá Gmail con el mensaje listo para enviar.</p>
     </div>
     <footer class="dialogo-pie">
       <button type="button" class="boton-accion" data-cerrar data-en="cancel">cancelar</button>
-      <button type="button" class="boton-accion" id="enviar-gmail" data-en="send with Gmail">enviar con Gmail</button>
-      <button type="submit" class="boton-accion boton-principal" data-en="send with mail app">enviar con mi app de correo</button>
+      <button type="submit" class="boton-accion boton-principal" data-en="send with Gmail">enviar con Gmail</button>
     </footer>
   </form>
 </dialog>
@@ -1087,15 +1086,6 @@ dopmax              javascript  node-js     npm</pre>
   dialogo.addEventListener("click", function (e) { if (e.target === dialogo) cerrarDialogo(); });
   formCorreo.addEventListener("submit", function (e) {
     e.preventDefault();
-    var d = new FormData(formCorreo);
-    var etiquetas = idioma === "en" ? ["Name: ", "Email: "] : ["Nombre: ", "Correo: "];
-    var cuerpo = etiquetas[0] + d.get("nombre") + "\n" + etiquetas[1] + d.get("correo") + "\n\n" + d.get("mensaje");
-    window.location.href = "mailto:" + destinoCorreo + "?subject=" + encodeURIComponent(d.get("asunto")) + "&body=" + encodeURIComponent(cuerpo);
-    formCorreo.reset();
-    cerrarDialogo();
-  });
-  document.getElementById("enviar-gmail").addEventListener("click", function () {
-    if (!formCorreo.reportValidity()) return;
     var d = new FormData(formCorreo);
     var etiquetas = idioma === "en" ? ["Name: ", "Email: "] : ["Nombre: ", "Correo: "];
     var cuerpo = etiquetas[0] + d.get("nombre") + "\n" + etiquetas[1] + d.get("correo") + "\n\n" + d.get("mensaje");
