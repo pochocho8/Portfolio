@@ -65,17 +65,49 @@ a:hover { color: var(--fg); text-decoration-color: var(--acento); }
 .barra nav { display: flex; flex-wrap: wrap; gap: 4px 18px; font-size: 13.5px; }
 .barra nav a { display: inline-block; min-height: 24px; line-height: 24px; color: var(--apagado); text-decoration: none; }
 .barra nav a:hover { color: var(--acento); }
-.idioma-btn {
-  font-family: inherit;
-  font-size: 13px;
-  min-height: 28px;
-  padding: 4px 12px;
-  background: transparent;
-  color: var(--acento);
-  border: 1px solid var(--borde-fuerte);
+/* Menú de idioma: ./idioma en la barra. Despliega las opciones sin llevar a ninguna sección. */
+.menu-idioma { position: relative; }
+.menu-btn {
+  font: inherit;
+  font-size: 13.5px;
+  line-height: 24px;
+  min-height: 24px;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--apagado);
   cursor: pointer;
 }
-.idioma-btn:hover { background: rgba(147, 201, 162, 0.12); color: var(--fg); }
+.menu-btn:hover, .menu-btn[aria-expanded="true"] { color: var(--acento); }
+.menu-lista {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 10;
+  list-style: none;
+  margin: 0;
+  padding: 6px 0;
+  min-width: 170px;
+  background: var(--bg-2);
+  border: 1px solid var(--borde-fuerte);
+}
+.menu-lista[hidden] { display: none; }
+.menu-op {
+  display: block;
+  width: 100%;
+  min-height: 32px;
+  padding: 8px 14px;
+  font: inherit;
+  font-size: 13.5px;
+  text-align: left;
+  white-space: nowrap;
+  background: none;
+  border: 0;
+  color: var(--fg);
+  cursor: pointer;
+}
+.menu-op:hover, .menu-op:focus-visible { background: rgba(147, 201, 162, 0.12); color: var(--acento); }
+.marca-op { color: var(--acento-suave); }
 
 /* ---------- Portada: texto a la izquierda, ficha a la derecha en escritorio ---------- */
 .hero { padding: clamp(40px, 7vw, 90px) 0 clamp(24px, 4vw, 48px); position: relative; z-index: 1; }
@@ -390,7 +422,13 @@ html[lang="en"] .i-es { display: none; }
     <a href="#proyectos" data-en="./projects">./proyectos</a>
     <a href="#contacto" data-en="./contact">./contacto</a>
   </nav>
-  <button type="button" class="idioma-btn" id="idioma" aria-label="Cambiar a inglés">EN</button>
+  <div class="menu-idioma" id="idioma-menu">
+    <button type="button" class="menu-btn" id="idioma-btn" aria-haspopup="true" aria-expanded="false" aria-controls="idioma-lista" data-en="./language">./idioma</button>
+    <ul class="menu-lista" id="idioma-lista" role="menu" hidden>
+      <li><button type="button" role="menuitemradio" aria-checked="true" class="menu-op" data-lang="es"><span class="marca-op">[x]</span> español</button></li>
+      <li><button type="button" role="menuitemradio" aria-checked="false" class="menu-op" data-lang="en"><span class="marca-op">[ ]</span> english</button></li>
+    </ul>
+  </div>
 </header>
 
 <main>
@@ -857,7 +895,9 @@ dopmax              javascript  node-js     npm</pre>
 
 (function () {
   var idioma = "es";
-  var btnIdioma = document.getElementById("idioma");
+  var menuBtn = document.getElementById("idioma-btn");
+  var menu = document.getElementById("idioma-lista");
+  var opciones = menu.querySelectorAll("[data-lang]");
 
   function seleccionar(el) {
     var rango = document.createRange();
@@ -878,13 +918,34 @@ dopmax              javascript  node-js     npm</pre>
     document.querySelectorAll("[data-en]").forEach(function (el) {
       el.innerHTML = l === "en" ? el.getAttribute("data-en") : el._es;
     });
-    btnIdioma.textContent = l === "en" ? "ES" : "EN";
-    btnIdioma.setAttribute("aria-label", l === "en" ? "Switch to Spanish" : "Cambiar a inglés");
+    opciones.forEach(function (o) {
+      var activo = o.getAttribute("data-lang") === l;
+      o.querySelector(".marca-op").textContent = activo ? "[x]" : "[ ]";
+      o.setAttribute("aria-checked", activo ? "true" : "false");
+    });
     document.title = l === "en" ? "Sergio Morocho Perea · Portfolio" : "Sergio Morocho Perea";
   }
 
-  btnIdioma.addEventListener("click", function () {
-    aplicarIdioma(idioma === "es" ? "en" : "es");
+  function abrirMenu(estado) {
+    menu.hidden = !estado;
+    menuBtn.setAttribute("aria-expanded", estado ? "true" : "false");
+  }
+  menuBtn.addEventListener("click", function (e) {
+    e.stopPropagation();
+    abrirMenu(menu.hidden);
+  });
+  opciones.forEach(function (o) {
+    o.addEventListener("click", function () {
+      aplicarIdioma(o.getAttribute("data-lang"));
+      abrirMenu(false);
+      menuBtn.focus();
+    });
+  });
+  document.addEventListener("click", function (e) {
+    if (!menu.hidden && !e.target.closest("#idioma-menu")) abrirMenu(false);
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !menu.hidden) { abrirMenu(false); menuBtn.focus(); }
   });
 
   document.querySelectorAll("[data-target]").forEach(function (btn) {
