@@ -312,7 +312,7 @@ pre.grafo { white-space: pre-wrap; overflow-wrap: anywhere; }
   padding: 6px 10px;
   border-bottom: 1px solid var(--borde);
   background: var(--acento-velo-suave);
-  font-size: var(--txt-xs);
+  font-size: var(--txt-sm);
   font-weight: 600;
   line-height: 1.35;
   color: var(--acento);
@@ -327,7 +327,7 @@ pre.grafo { white-space: pre-wrap; overflow-wrap: anywhere; }
   padding: 10px 12px;
   overflow: hidden;
   color: var(--fg);
-  font-size: var(--txt-sm);
+  font-size: var(--txt-md);
   line-height: 1.45;
   overflow-wrap: anywhere;
 }
@@ -421,6 +421,7 @@ html[lang="en"] .i-es { display: none; }
 }
 @media (max-width: 600px) {
   .ventana { flex-basis: 170px; width: 170px; }
+  .ventana .desc { font-size: var(--txt-sm); }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
