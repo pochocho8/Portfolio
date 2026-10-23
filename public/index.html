@@ -20,14 +20,14 @@
   --borde: rgba(147, 201, 162, 0.16);
   --borde-fuerte: rgba(147, 201, 162, 0.3);
   /* Velos del acento para hover y fondos */
-  --acento-velo: var(--acento-velo);
-  --acento-velo-suave: var(--acento-velo-suave);
+  --acento-velo: rgba(147, 201, 162, 0.12);
+  --acento-velo-suave: rgba(147, 201, 162, 0.06);
   --fondo-tarjeta: #0f1712;
-  /* Escala tipográfica: 12 / 13 / 14.5 / 15.5 px */
-  --txt-xs: 12px;
-  --txt-sm: 13px;
-  --txt-md: 14.5px;
-  --txt-lg: 15.5px;
+  /* Escala tipográfica: 13 / 14.5 / 15.5 / 17 px */
+  --txt-xs: 13px;
+  --txt-sm: 14.5px;
+  --txt-md: 15.5px;
+  --txt-lg: 17px;
   color-scheme: dark;
 }
 html { background: var(--bg); scroll-behavior: smooth; scroll-padding-top: 64px; }
@@ -37,7 +37,7 @@ body {
   color: var(--fg);
   font-family: "JetBrains Mono", "Fira Code", ui-monospace, Menlo, Consolas, monospace;
   font-size: var(--txt-lg);
-  line-height: 1.7;
+  line-height: 1.75;
   overflow-x: hidden;
   padding-left: max(16px, env(safe-area-inset-left, 0px));
   padding-right: max(16px, env(safe-area-inset-right, 0px));
@@ -139,7 +139,7 @@ a:hover { color: var(--fg); text-decoration-color: var(--acento); }
   color: var(--acento);
   overflow-wrap: anywhere;
 }
-.hero .rol { font-size: clamp(16px, 2vw, 20px); color: var(--fg); margin: 0 0 26px; max-width: 42em; }
+.hero .rol { font-size: clamp(17px, 2.2vw, 22px); color: var(--fg); margin: 0 0 26px; max-width: 42em; }
 .hero-grid { max-width: 880px; margin: 0 auto; }
 @media (min-width: 1100px) {
   .hero h1 { font-size: clamp(40px, 5.4vw, 74px); }
@@ -217,7 +217,7 @@ a:hover { color: var(--fg); text-decoration-color: var(--acento); }
   padding-top: clamp(32px, 4vw, 48px);
   border-top: 1px dashed var(--borde-fuerte);
 }
-.largo { font-size: clamp(16px, 1.8vw, 18px); max-width: 46em; }
+.largo { font-size: clamp(17px, 2vw, 20px); max-width: 46em; }
 
 /* Numeración de secciones: [01] … [05] delante del prompt de cada bloque. */
 main { counter-reset: sec; }
@@ -328,7 +328,7 @@ pre.grafo { white-space: pre-wrap; overflow-wrap: anywhere; }
   overflow: hidden;
   color: var(--fg);
   font-size: var(--txt-md);
-  line-height: 1.45;
+  line-height: 1.5;
   overflow-wrap: anywhere;
 }
 .ventana .perm {
@@ -420,8 +420,10 @@ html[lang="en"] .i-es { display: none; }
   pre.grafo { font-size: var(--txt-sm); }
 }
 @media (max-width: 600px) {
-  .ventana { flex-basis: 170px; width: 170px; }
-  .ventana .desc { font-size: var(--txt-sm); }
+  /* En móvil la ventana crece con su texto: nada queda cortado. */
+  .ventana { flex-basis: 170px; width: 170px; aspect-ratio: auto; min-height: 170px; }
+  .ventana .desc { font-size: var(--txt-sm); overflow: visible; }
+  .ventana .perm { white-space: normal; text-overflow: clip; overflow-wrap: anywhere; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
