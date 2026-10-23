@@ -386,7 +386,7 @@ html[lang="en"] .i-es { display: none; }
     <a href="#sobre-mi" data-en="./about_me">./sobre_mi</a>
     <a href="#experiencia" data-en="./experience">./experiencia</a>
     <a href="#habilidades" data-en="./skills">./habilidades</a>
-    <a href="#insignias" data-en="./badges">./insignias</a>
+    <a href="#certificaciones" data-en="./certifications">./certificaciones</a>
     <a href="#proyectos" data-en="./projects">./proyectos</a>
     <a href="#contacto" data-en="./contact">./contacto</a>
   </nav>
@@ -676,10 +676,10 @@ html[lang="en"] .i-es { display: none; }
     </div>
   </section>
 
-  <section class="bloque reveal" id="insignias">
-    <p class="cmd" data-en='<span class="ps">sergio@portfolio:~$</span> ls -l ~/badges/'><span class="ps">sergio@portfolio:~$</span> ls -l ~/insignias/</p>
-    <p class="nota" data-en="Verified badges. Each window is one badge; the link goes to my Credly profile.">Insignias verificadas. Cada ventana es una insignia; el enlace lleva a mi perfil de Credly.</p>
-    <div class="ventanas" id="insignias-lista"></div>
+  <section class="bloque reveal" id="certificaciones">
+    <p class="cmd" data-en='<span class="ps">sergio@portfolio:~$</span> ls -l ~/certifications/'><span class="ps">sergio@portfolio:~$</span> ls -l ~/certificaciones/</p>
+    <p class="nota" data-en="Verified certifications. Each window is one certification; the link goes to my Credly profile.">Certificaciones verificadas. Cada ventana es una certificación; el enlace lleva a mi perfil de Credly.</p>
+    <div class="ventanas" id="certificaciones-lista"></div>
   </section>
 
   <section class="bloque reveal" id="proyectos">
@@ -802,7 +802,7 @@ dopmax              javascript  node-js     npm</pre>
   }
 })();
 
-// Insignias de Credly. Para añadir una, copia un objeto de la lista y rellena sus campos en ambos idiomas.
+// Certificaciones (insignias de Credly). Para añadir una, copia un objeto de la lista y rellena sus campos en ambos idiomas.
 // Si un campo no aplica (por ejemplo la fecha), déjalo vacío. La sección se genera sola.
 (function () {
   var INSIGNIAS = [
@@ -831,7 +831,7 @@ dopmax              javascript  node-js     npm</pre>
     return '<span class="i-es">' + esc(es) + '</span><span class="i-en">' + esc(en) + '</span>';
   }
 
-  var lista = document.getElementById("insignias-lista");
+  var lista = document.getElementById("certificaciones-lista");
   lista.innerHTML = INSIGNIAS.map(function (b) {
     var emisor = bi(b.emisor + (b.verificada ? " · [verificada]" : ""), b.emisor + (b.verificada ? " · [verified]" : ""));
     var meta = bi("tipo: " + b.tipo.es + " · nivel: " + b.nivel.es, "type: " + b.tipo.en + " · level: " + b.nivel.en);
